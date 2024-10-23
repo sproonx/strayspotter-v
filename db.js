@@ -4,8 +4,8 @@ Project Description : A web service that utilizes Wasabi cloud, for people to sh
   The data will be analysed to provide the insight of the stray cats.
 Member : KIM JOWOON, ..
 Date Started : 21.10.2024
-Current version : 1.0
-Version date : 23.10.2024
+Current version : 2.0
+Version date : 24.10.2024
 */
 
 // Create the connection to database
@@ -24,12 +24,18 @@ let data = {
 };
 
 const exifr = require('exifr');
-let filename = 'resources/sample_image1.jpg';
+let filename = 'resources/sample_image1.jpg'; // CHANGE THIS TO THE FILE USER UPLOADED
 extractMetadata(filename).then(metadata => {
   data.latitude = metadata.latitude;
   data.longitude = metadata.longitude;
   data.date = metadata.GPSDateStamp.replaceAll(':','-');
-  insert_data(data);
+
+  // insert_data(data).then(insertId => {
+  //   console.log(insertId + ' added to the database');
+  // }).catch(err => {
+  //   console.error('Error inserting data:', err);
+  // });
+  select_data(2);
 });
 
 
@@ -46,7 +52,7 @@ async function extractMetadata(file) {
         if (output === undefined) {
             console.log("Metadata undefined");
         } else {
-            console.log("Data retrieved!: ");
+            console.log("Metadata retrieved!");
         }
         return output;
     } catch (error) {
@@ -58,25 +64,29 @@ async function extractMetadata(file) {
 function insert_data(data) {
   const connection = createDBConnection()
   // A query to insert data into table
-  connection.query(
-    `INSERT INTO pictures (latitude, longitude, date_taken, postcode, district_no, district_name, cat_status) 
-    VALUES (` + data.latitude + `, ` + data.longitude + `,'` + data.date + `' ,` 
-              + data.postcode + `,` + data.district_no + `, '` + data.district_name + `' ,` 
-              + data.cat_status + `);`
-    ,function (err, results) {
-      if (err) { console.log(err) }
-      console.log(results);
-    }
-  );
-  // Ends the connection
-  connection.end();
+  
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO pictures (latitude, longitude, date_taken, postcode, 
+      district_no, district_name, cat_status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [data.latitude, data.longitude, data.date, data.postcode, data.district_no, data.district_name, data.cat_status]
+      ,(err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results.insertId);
+        }
+        connection.end();
+      })
+  })
 }
 
-function select_data() {
+function select_data(limit) {
   const connection = createDBConnection()
   // A query to insert data into table
   connection.query(
-    `SELECT * FROM pictures`
+    `SELECT * FROM pictures LIMIT ` + limit
     ,function (err, results) {
       if (err) { console.log(err) }
       console.log(results);
