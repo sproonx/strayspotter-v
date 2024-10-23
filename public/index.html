@@ -5,29 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StraySpotter</title>
     <link rel="stylesheet" href="styles.css">
-
-
-    <script>
-        document.querySelector('.upload-button').addEventListener('click', function() {
-            document.getElementById('file-upload').click();
-        });
-    
-        // Add this new code for smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-    
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
 </head>
 <body>
     <nav>
         <div class="logo">
-            <img src="../resources/logo.jpeg" alt="StraySpotter logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo">
             <span>StraySpotter</span>
         </div>
         <ul class="nav-links">
@@ -39,7 +21,7 @@
         </ul>
         <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
-                <img src="../resources/camera_icon.png" alt="Upload">
+                <img src="resources/camera_icon.png" alt="Upload">
             </a>
         </div>
         <!-- Add the hidden file input -->
@@ -54,13 +36,17 @@
                 <p>StraySpotter is dedicated to documenting and protecting stray cats in urban areas.</p>
                 
             <div id="upload" class="upload-section">
-                    <button class="upload-button">Upload</button>
-                    <input type="file" id="file-upload" style="display: none;">
+                <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
+                    <input type="file" id="imageInput" name="image" required /> 
+                    <input type="submit" class="upload-button" value="Upload"/>
+                </form>
             </div>
             </div>
 
+            
+
             <div class="purpose-image">
-                <img src="../resources/cathead2.png" alt="Interactive Cat">
+                <img src="resources/cathead2.png" alt="Interactive Cat">
                 <div class="speech-bubble">Meow! Feed me!</div>
             <!-- <a href="https://www.flaticon.com/free-icons/camera" title="camera icons">Camera icons created by Freepik - Flaticon</a> -->
             </div>
@@ -71,12 +57,14 @@
 
     <section class="gallery" id="gallery" >
         <h2>Gallery</h2>
+        <div class="gallery-grid" id="imageContainer"></div>
+<!-- 
         <div class="gallery-grid">
             <img src="../resources/gallery_cat1.jpg" alt="Cat 1">
             <img src="../resources/gallery_cat2.jpg" alt="Cat 2">
             <img src="../resources/gallery_cat3.jpeg" alt="Cat 3">
             <img src="../resources/gallery_cat4.jpg" alt="Cat 4">
-        </div>
+        </div> -->
         <a href="gallery.html"><button class="see-more">See More</button></a>
     </section>
 
@@ -85,7 +73,7 @@
         <h2>Our Founders</h2>
         <div class="founders-grid">
             <div class="founder">
-                <img src="../resources/cathead2.png" alt="Alex">
+                <img src="resources/cathead2.png" alt="Alex">
                 <h3>Alex</h3>
                 <p> Co-founder & CEO</p>
                 <p class="bio">heyyy</p>
@@ -93,14 +81,14 @@
 
             
             <div class="founder">
-                <img src="../resources/cathead2.png" alt="John">
+                <img src="resources/cathead2.png" alt="John">
                 
                 <h3>John</h3>
                 <p>Co-founder & CTO</p>
                 <p class="bio">hi</p>
             </div>
             <div class="founder">
-                <img src="../resources/cathead2.png" alt="Kelvin">
+                <img src="resources/cathead2.png" alt="Kelvin">
                 <h3>Kelvin</h3>
                 <p>Co-founder & COO</p>
                 <p class="bio">hello</p>
@@ -119,7 +107,20 @@
         <p>Follow us on Socials | GitHub</p>
     </footer>
 
-
+    <script src="script.js">
+        // Add this new code for smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+    
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
     
 </body>
+
+
 </html>
