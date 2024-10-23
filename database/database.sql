@@ -13,7 +13,4 @@ CREATE TABLE IF NOT EXISTS pictures (
     cat_status Int
 );
 
-INSERT INTO pictures (latitude, longitude, original_time, postcode, district_no, district_name, user_comment, cat_status)
-VALUES (37.7749, -122.4194, '2024-10-18 04:56:17' ,94103, 13, 'Geylang, Eunos', 'Found a stray cat near the park', 1);
-
 SELECT * FROM pictures;
