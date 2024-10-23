@@ -1,12 +1,4 @@
-/*
-Project Title : StraySpotter
-Project Description : A web service that utilizes Wasabi cloud, for people to share stray cat pictures.
-  The data will be analysed to provide the insight of the stray cats.
-Member : KIM JOWOON, ..
-Date Started : 21.10.2024
-Current version : 2.0
-Version date : 24.10.2024
-*/
+
 
 // Create the connection to database
 const mysql = require('mysql2');

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS pictures (
     id INT AUTO_INCREMENT PRIMARY KEY,
     latitude FLOAT,
     longitude FLOAT,
-    data_taken DATE,
+    date_taken DATE,
     postcode INT,
     district_no INT,
     district_name VARCHAR(20),
