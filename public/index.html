@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StraySpotter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="../resources/logo.jpeg" alt="StraySpotter logo">
+            <span>StraySpotter</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Upload</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="#">Summary</a></li>
+        </ul>
+
+
+
+        <div class="upload-icon">
+            <a href="#" onclick="document.getElementById('file-upload').click();">
+                <img src="../resources/camera_icon.png" alt="Upload">
+            </a>
+        </div>
+        <!-- Add the hidden file input -->
+        <input type="file" id="file-upload" style="display: none;">
+
+   
+    </nav>
+    
+
+
+
+
+    <header>
+        <div class="purpose-container">
+            <div class="purpose-text">
+                <h1>Who We Are</h1>
+                <p>StraySpotter is dedicated to documenting and protecting stray cats in urban areas.</p>
+                
+                <div class="upload-section">
+                    <button class="upload-button">Upload</button>
+                    <input type="file" id="file-upload" style="display: none;">
+                </div>
+                
+
+                
+
+
+            </div>
+            <div class="purpose-image">
+                <img src="../resources/cathead2.png" alt="Interactive Cat">
+                <div class="speech-bubble">Meow! Feed me!</div>
+            <!-- <a href="https://www.flaticon.com/free-icons/camera" title="camera icons">Camera icons created by Freepik - Flaticon</a> -->
+
+            </div>
+        </div>
+    </header>
+    
+
+
+    <section class="gallery">
+        <h2>Gallery</h2>
+        <div class="gallery-grid">
+            <img src="../resources/gallery_cat1.jpg" alt="Cat 1">
+            <img src="../resources/gallery_cat2.jpg" alt="Cat 2">
+            <img src="../resources/gallery_cat3.jpeg" alt="Cat 3">
+            <img src="../resources/gallery_cat4.jpg" alt="Cat 4">
+        </div>
+        <button class="see-more">See More</button>
+    </section>
+
+
+    <section class="summary">
+        <h2>Summary</h2>
+        <p>This website helps collect and share images of stray cats. Let’s work together to provide them a better life!</p>
+    </section>
+    <footer>
+        <p>Follow us on Socials | GitHub</p>
+    </footer>
+
+    <script>
+        document.querySelector('.upload-button').addEventListener('click', function() {
+            document.getElementById('file-upload').click();
+        });
+    </script>
+</body>
+</html>
