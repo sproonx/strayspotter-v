@@ -4,8 +4,8 @@ Project Description : A web service that utilizes Wasabi cloud, for people to sh
   The data will be analysed to provide the insight of the stray cats.
 Member : KIM JOWOON, ..
 Date Started : 21.10.2024
-Current version : 1.0
-Version date : 23.10.2024
+Current version : 2.0
+Version date : 24.10.2024
 */
 
 // Create the connection to database
@@ -30,12 +30,12 @@ extractMetadata(filename).then(metadata => {
   data.longitude = metadata.longitude;
   data.date = metadata.GPSDateStamp.replaceAll(':','-');
 
-  insert_data(data).then(insertId => {
-    console.log(insertId + ' added to the database');
-  }).catch(err => {
-    console.error('Error inserting data:', err);
-  });
-  // select_data(10);
+  // insert_data(data).then(insertId => {
+  //   console.log(insertId + ' added to the database');
+  // }).catch(err => {
+  //   console.error('Error inserting data:', err);
+  // });
+  select_data(2);
 });
 
 
