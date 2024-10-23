@@ -8,12 +8,25 @@ body {
 html {
     scroll-behavior: smooth;
 }
-nav {
+/* nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #add8e6;
     padding: 10px 20px;
+}
+ */
+
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333; /* Dark background */
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensure it stays above other content */
 }
 
 
@@ -41,8 +54,17 @@ nav {
 }
 
 
+span{
+    color: white;
+    font-family: "Amatic SC";
+    font-size: 2em;
+
+}
 
 .nav-links li {
+    color: white;
+    font-family: "Amatic SC";
+    font-size: 30px;
     padding: 10px;
 }
 
@@ -54,7 +76,7 @@ nav {
 
 .nav-links a {
     text-decoration: none;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 
