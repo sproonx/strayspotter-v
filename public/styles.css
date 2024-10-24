@@ -636,7 +636,7 @@ footer p:hover {
     
 
     .nav-links li {
-        margin: 5px 0; /* Adjust spacing between links */
+        margin: 2px 0; /* Adjust spacing between links */
     }
 
     .nav-links.active {
