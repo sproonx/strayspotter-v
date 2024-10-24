@@ -1,3 +1,14 @@
+/*
+Project Title : StraySpotter
+Project Description : A web service that utilizes Wasabi cloud, for people to share stray cat pictures.
+  The data will be analysed to provide the insight of the stray cats.
+Member : KIM JOWOON, KELVIN, ALEX
+Date Started : 21.10.2024
+Current version : 2.0
+Version date : 24.10.2024
+*/
+
+
 const express = require('express');
 const multer = require('multer');
 const { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand, CreatePresignedUrlCommand } = require('@aws-sdk/client-s3');
@@ -10,6 +21,8 @@ const heicConvert = require('heic-convert');
 const fs = require('fs');
 const {exiftool} = require('exiftool-vendored');
 const tmp = require('tmp');
+const mysql = require('mysql2');
+const { insert_data, select_data } = require('./db.js');
 
 require('dotenv').config();
 
@@ -40,8 +53,7 @@ async function extractMetadata(file) {
   try {
       // Extract all data
       let output = await exifr.parse(file, true);
-      //console.log(output);
-     // var output = await exifr.parse(file, ['GPSLatitude', 'GPSLongitude', 'GPSDateStamp']);
+      
       if (output === undefined) {
           console.log("Metadata undefined");
       } else {
@@ -107,9 +119,6 @@ function create32BitHash(input) {
 }
 
 function uploadData(fileData, res, unique_id) {
-   extractMetadata(fileData).then(metadata => {
-      console.log(metadata); 
-    })
 
     console.log(fileData);
     // const providedFilename = req.body.filename; - For user input / Not used anyomre
@@ -130,6 +139,7 @@ function uploadData(fileData, res, unique_id) {
 
 
 
+
 app.use(express.static(path.join(__dirname, client_folder_name)));
 
 app.get('/', (req, res) => {
@@ -146,19 +156,29 @@ app.post('/upload', async (req, res) => {
       return res.status(400).send('No file selected!');
     }
     
-    console.log(req.file); 
 
-    const providedFilename = req.file.originalname;
-    let unique_id = create32BitHash(providedFilename);
+    // TO be deleted, generating temporary file name
+    // const providedFilename = req.file.originalname;
+    // let unique_id = create32BitHash(providedFilename);
 
-    if (req.file.mimetype == 'image/heic'){
-      fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-          uploadData(fileData, res, unique_id)  
-      })
-    } else { 
-      fileData = req.file.buffer
-      uploadData(fileData, res, unique_id)  
-    }
+    // Converting heic to jpg with metadata
+
+    const exifData = await exifr.parse(req.file.buffer);
+    console.log(exifData);
+    insert_data(exifData).then(picture_id => {
+      console.log(picture_id); 
+
+      if (req.file.mimetype == 'image/heic'){
+        fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
+            uploadData(fileData, res, 'k' + picture_id)  
+        })
+      } else { 
+        fileData = req.file.buffer
+        uploadData(fileData, res, 'k' + picture_id)  
+      }
+    }).catch(err => {
+      console.error("Error inserting data:", err);
+    });
 
   });
 });
