@@ -1,6 +1,6 @@
 const galleryGrid = document.getElementById('galleryGrid');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
-  
+const MAX_KEYS_TO_BE_SENT = 100;
 
 //   const images = [
 //     { id: 1, src: '/placeholder.svg?height=400&width=400', likes: 120, comments: 15 },
@@ -42,9 +42,9 @@ function createGalleryItem(src) {
     `;
 }
 
-async function loadImages() {
+async function loadImages(maxKeys) {
 
-  const response = await fetch('/images');
+  const response = await fetch(`/images?maxKeys=${maxKeys}`);
 
   if (!response.ok) {
     console.error('Failed to fetch images:', response.statusText);
@@ -73,4 +73,4 @@ loadMoreBtn.addEventListener('click', () => {
     alert('Load more images functionality would be implemented here.');
 });
 
-loadImages();
+loadImages(MAX_KEYS_TO_BE_SENT);

@@ -18,11 +18,7 @@ const {Readable} = require('stream');
 const crypto = require('crypto');
 const exifr = require('exifr');
 const heicConvert = require('heic-convert');
-const fs = require('fs');
-const {exiftool} = require('exiftool-vendored');
-const tmp = require('tmp');
-const mysql = require('mysql2');
-const { insert_data, select_data } = require('./db.js');
+const { insertDataToDB, fetchGPSByID } = require('./db.js');
 
 require('dotenv').config();
 
@@ -49,28 +45,11 @@ const s3Client = new S3Client({
   },
 });
 
-async function extractMetadata(file) {
-  try {
-      // Extract all data
-      let output = await exifr.parse(file, true);
-      
-      if (output === undefined) {
-          console.log("Metadata undefined");
-      } else {
-          console.log("Data retrieved!");
-      }
-      return output;
-  } catch (error) {
-      console.error('Error reading metadata:', error);
-      return null;
-  }
-}
-
 
 async function convertHeicToJpg(inputBuffer) {
 
   // Extract EXIF data
-  const exifData = await exifr.parse(inputBuffer);
+  // const exifData = await exifr.parse(inputBuffer);
 
   // Convert HEIC to JPG
   const jpgBuffer = await heicConvert({
@@ -164,7 +143,7 @@ app.post('/upload', async (req, res) => {
 
     const exifData = await exifr.parse(req.file.buffer);
     console.log(exifData);
-    insert_data(exifData).then(picture_id => {
+    insertDataToDB(exifData).then(picture_id => {
       console.log(picture_id); 
 
       if (req.file.mimetype == 'image/heic'){
@@ -188,13 +167,23 @@ app.get('/images', async (req, res) => {
     const params = {
       Bucket: bucket_name,
     };
-  
+
+    console.log(req.query);
+    const maxKeys = req.query.maxKeys;
+    console.log(maxKeys);
     try {
       const command = new ListObjectsV2Command(params);
       const data = await s3Client.send(command);
       
       const imageKeys = (data.Contents || []).map(item => item.Key);
-      res.json(imageKeys);
+
+      imageKeys.sort((a, b) => {
+        const numA = parseInt(a.replace(/\D/g, ''), 10); // Extract number from key name
+        const numB = parseInt(b.replace(/\D/g, ''), 10);
+        return numB - numA; // Compare in descending order
+      });
+
+      res.json(imageKeys.slice(0,maxKeys));
     } catch (err) {
       return res.status(500).send(err.message);
     }
@@ -205,7 +194,7 @@ app.get('/images', async (req, res) => {
 
     const { key } = req.query;
 
-    select_data(key.slice(1)).then(data => {
+    fetchGPSByID(key.slice(1)).then(data => {
       // Process the returned data here
 
       data_latitude = data[0].latitude ?? ""
