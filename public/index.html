@@ -51,9 +51,10 @@
         <ul class="nav-links" id="nav-links">
             <li id="home-link"><a href="#home">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li id="founders-link"><a href="index.html#founders">Founders</a></li>
+            <li><a href="#founders">Our Team</a></li>
             <li><a href="map.html">Map</a></li>
-            <li id="summary-link"><a href="index.html#summary">Summary</a></li>
+            <li><a href="report.html">Report</a></li>
+
         </ul>
         <!-- <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
@@ -194,7 +195,7 @@
 </div>
 
  -->
-
+<!-- 
  <div class="report-section">
     <img src="resources/cat.png" alt="Stray Cat" class="floating-image">
     <h1>Stray Cat Spotted Today</h1>
@@ -210,7 +211,52 @@
     </div>
     <button class="report-link" onclick="goToReport()">Take me to the report</button>
 </div>
-<script src="scripts.js"></script>
+<script src="scripts.js"></script> -->
+
+<section class="report-section">
+    <div class="report-container">
+        <div class="report-header">
+            <h2>Stray Cat Reports</h2>
+            <p>Stay informed about the stray cat population in your area</p>
+        </div>
+        <div class="report-content">
+            <div class="report-stats">
+                <h3>Current Statistics</h3>
+                <div class="stat-item">
+                    <p class="stat-label">Strays Spotted Today:</p>
+                    <p class="stat-value">25</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Weekly Total:</p>
+                    <p class="stat-value">87</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Monthly Total:</p>
+                    <p class="stat-value">342</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-label">Cats Helped This Month:</p>
+                    <p class="stat-value">57</p>
+                </div>
+            </div>
+            <div class="report-buttons">
+       
+                <a href="report.html" class="report-btn">View Full Detailed Report</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ... (rest of the content remains unchanged) ... -->
+
+<script>
+    function showReport(timeframe) {
+        // This function can be implemented to show different reports
+        // For now, it just alerts the user
+        alert(`Showing ${timeframe} report. This feature is coming soon!`);
+    }
+</script>
+
 
 
 

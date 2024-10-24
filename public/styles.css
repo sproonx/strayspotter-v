@@ -14,6 +14,8 @@ body {
     background-color: #f5f5dc;
 }
 
+
+
 html {
     scroll-behavior: smooth;
 }
@@ -57,7 +59,6 @@ span{
     color: white;
     font-family: "Amatic SC";
     font-size: 2em;
-
 }
 
 .nav-links li {
@@ -360,14 +361,18 @@ header p {
 }
 
 .gallery {
-    background-color: #8f9779;
+    /* background-color: #8f9779; */
+    background-color: #3B4013;
     text-align: center;
+    height: 70em;
     padding: 50px 20px;
+ 
 }
 
 .gallery h2 {
-    font-size: 32px;
-    margin-bottom: 20px;
+    color: #fff;
+    font-size: 100px;
+    margin-bottom: 2.5em;
 }
 
 .gallery-grid {
@@ -378,7 +383,7 @@ header p {
 }
 
 .gallery-grid img {
-    width: 300px;
+    width: 400px;
     transition: transform 0.3s, filter 0.3s;
     filter: brightness(0.7);
     border-radius: 50px; 
@@ -391,11 +396,14 @@ header p {
 }
 
 .see-more {
-    background-color: #8f9779;
-    color: white;
+    /* background-color: #8f9779; */
+    background-color: #BF8C60;
+    color: rgb(249, 249, 249);
     border: none;
     padding: 10px 20px;
+    width: 10em;
     cursor: pointer;
+    font-size: xx-large;
     transition: background-color 0.3s, box-shadow 0.3s;
     border-radius: 5px;
     margin-top: 5em;
@@ -409,16 +417,17 @@ header p {
 
 
 .founders {
-    background-color: #f5f5dc;
+    background-color: #042940;
     /* background-color: #f9f9f9; */
     text-align: center;
     padding: 50px 20px;
+   
 }
 
 
 .founders h2 {
-    color: #333;
-    font-size: 36px;
+    color: #ffffff;
+    font-size: 100px;
     /* color: #34568B; */
     margin-bottom: 100px;
 }
@@ -434,14 +443,15 @@ header p {
 .founder{
     background-color: #fff;
     border-radius: 40px;
-    height: 30em;
+    height: 32em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
-    width: 300px;
+    width: 400px;
     text-align: left;
     padding-left: 30px;
     
+    margin-bottom: 15em;
 
 }
 
@@ -567,7 +577,6 @@ footer p:hover {
     max-width: 1200px;
     margin: 4em auto;
     padding: 2px 0rem 0px 2%;
-
     box-shadow: 0 10px 30px rgba(0, 0, 0, 10000);
 }
 
@@ -721,19 +730,97 @@ footer p:hover {
 
 
 
+/* Report page */
 
 
 
+     /* body {
+        font-family: 'Roboto Slab', serif;
+        background: linear-gradient(to bottom right, #f3e7ff, #e6eeff);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } */
 
 
+    .report-card {
+        margin: 10em;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
+        padding: 5em;
+        max-width: 100%;
+        height: 50em;
+     
+       
+    
+    
+    }
+ 
+    .report-card h1 {
+        color: #4a4a4a;
+        text-align: center;
+        margin-bottom: 100px; /* Updated margin-bottom */
+        font-size: 8em; /* Updated font-size */
+    }
+  
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .report-btn {
+        background-color: #6b46c1;
+        color: white;
+        width: 10em;
+        border: none;
+        font-size: xx-large;
+        padding: 15px 20px;
+        border-radius: 20px;
+        cursor: pointer;
 
+        transition: background-color 0.3s;
+    }
+    .report-btn:hover {
+        background-color: #553c9a;
+    }
+    .report-btn.active {
+        background-color: #4c1d95;
+    }
+    .report-text {
+        background-color: #f8f8f8;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 20px; /* Updated padding */
+        margin-top: 20px;
+        line-height: 1.6; /* Added line-height */
+        padding: 50px 150px;
+        font-size: x-large;
+        /* font-weight: bold; */
+        color:#10403B;
+    }
+
+
+    .report-text p { /* Added style for paragraphs inside .report-text */
+        margin-bottom: 20px;
+    }
+    #stray-count {
+        text-align: center;
+        font-size: 1.2em; /* Updated font-size */
+        margin: 20px 0; /* Updated margin */
+        color: #6b46c1; /* Updated color */
+    }
 
 
 
 
 
 /* Report CSS */
-.report-section {
+/* .report-section {
     position: relative;
     text-align: center;
     padding: 150px;
@@ -824,4 +911,123 @@ footer p:hover {
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+} */
+
+
+
+
+
+
+/* Report section in index */
+
+
+.report-section {
+    background-color: #f0f4ff;
+    padding: 60px 0;
+    margin-top: 40px;
+}
+
+.report-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.report-header {
+
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.report-header h2 {
+    font-size: 100px;
+    color: #2c3e50;
+    margin-bottom: 70px;
+}
+
+.report-header p {
+
+    font-size: 2.0em;
+    margin-bottom: 2em;
+    color: #34495e;
+}
+
+.report-content {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.report-stats {
+    flex: 1;
+    min-width: 250px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.report-stats h3 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stat-label {
+    font-size: 1.1em;
+    color: #34495e;
+}
+
+.stat-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #6b46c1;
+}
+
+.report-buttons {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 30px;
+    margin-top: 10em;
+}
+
+.report-btn {
+    background-color: #6b46c1;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1.1em;
+    text-align: center;
+    text-decoration: none;
+}
+
+.report-btn:hover {
+    background-color: #553c9a;
+}
+
+@media (max-width: 768px) {
+    .report-content {
+        flex-direction: column;
+    }
+
+    .report-buttons {
+        margin-left: 0;
+        margin-top: 20px;
+    }
 }
