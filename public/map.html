@@ -105,15 +105,21 @@
         if (urlResponse.ok) {
 
             urlResponse.json().then(data => {
-                console.log(data);
-            })
-            // const marker = L.marker([location.lat, location.lon]).addTo(map);
 
-            // // Create an HTML string for the tooltip
-            // const tooltipContent = `<img src="${url}" alt="Cat" class="tooltip-image"/>`;
+                const lat_variation = (Math.random() - 0.5) * 0.0001; 
+                const lon_variation = (Math.random() - 0.5) * 0.000005; 
+                latitude = data.latitude*(1+lat_variation); 
+                longitude = data.longitude*(1+lon_variation);
+                url = data.url;
+
+                const marker = L.marker([latitude, longitude]).addTo(map);
+
+                // Create an HTML string for the tooltip
+                const tooltipContent = `<img src="${url}" alt="Cat" class="tooltip-image"/>`;
             
-            // // Bind the tooltip to the marker
-            // marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
+                // Bind the tooltip to the marker
+                marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
+            })
         } else {
             console.error('Failed to fetch pre-signed URL:', urlResponse.statusText);
         }

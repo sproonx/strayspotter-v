@@ -48,18 +48,24 @@ function insert_data(metadata) {
 }
 
 function select_data(id) {
-  const connection = createDBConnection()
-  // A query to insert data into table
-  connection.query(
-    `SELECT latitude,longitude FROM pictures WHERE id = ?`, id
-    ,function (err, results) {
-      if (err) { console.log(err) }
-      // console.log(results);
-      return(results);
-    }
-  );
-  // Ends the connection
-  connection.end();
+  return new Promise((resolve, reject) => {
+    const connection = createDBConnection();
+
+    // A query to select data from the table
+    connection.query(
+      `SELECT latitude, longitude FROM pictures WHERE id = ?`, 
+      [id], // Pass `id` as an array for parameter binding
+      function (err, results) {
+        // Ends the connection
+        connection.end();
+
+        if (err) {
+          return reject(err); // Reject the promise with the error
+        }
+        resolve(results); // Resolve the promise with the results
+      }
+    );
+  });
 }
 
 function createDBConnection() {
