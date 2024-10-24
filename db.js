@@ -4,56 +4,29 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Extracted data from the picture
-let data = {
-  latitude : null,
-  longitude : null,
-  date : null,
-  postcode : 123,
-  district_no : 12,
-  district_name : 'TEST',
-  cat_status : 1,
-};
-
-const exifr = require('exifr');
-let filename = 'resources/sample_image1.jpg'; // CHANGE THIS TO THE FILE USER UPLOADED
-extractMetadata(filename).then(metadata => {
-  data.latitude = metadata.latitude;
-  data.longitude = metadata.longitude;
-  data.date = metadata.GPSDateStamp.replaceAll(':','-');
-
-  // insert_data(data).then(insertId => {
-  //   console.log(insertId + ' added to the database');
-  // }).catch(err => {
-  //   console.error('Error inserting data:', err);
-  // });
-  select_data(2);
-});
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Fuctions 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
- // Extract Metadata from the picture
-async function extractMetadata(file) {
-    try {
-        // Extract all data
-        // let output = await exifr.parse(file, true);
-        let output = await exifr.parse(file, ['GPSLatitude', 'GPSLongitude', 'GPSDateStamp']);
-        if (output === undefined) {
-            console.log("Metadata undefined");
-        } else {
-            console.log("Metadata retrieved!");
-        }
-        return output;
-    } catch (error) {
-        console.error('Error reading metadata:', error);
-        return null;
-    }
+module.exports = {
+  insert_data, select_data, createDBConnection 
 }
 
-function insert_data(data) {
+
+// THE ADDRESS AND CAT STAUTS TO BE UPDATED
+function insert_data(metadata) {
+
+  let data = {
+    latitude : metadata.latitude,
+    longitude : metadata.longitude,
+    date : metadata.CreateDate ?? "9999-12-30",
+    postcode : 123,
+    district_no : 12,
+    district_name : 'TEST',
+    cat_status : 1,
+  };
+  // if (metadata.GPSDateStamp) {
+  //   data.date = metadata.GPSDateStamp.replaceAll(':','-');
+  // } else if (metadata.CreateDate) {
+  //   data.date = metadata.CreateDate;
+  // }
+
   const connection = createDBConnection()
   // A query to insert data into table
   
