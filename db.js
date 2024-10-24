@@ -47,14 +47,15 @@ function insert_data(metadata) {
   })
 }
 
-function select_data(limit) {
+function select_data(id) {
   const connection = createDBConnection()
   // A query to insert data into table
   connection.query(
-    `SELECT * FROM pictures LIMIT ` + limit
+    `SELECT latitude,longitude FROM pictures WHERE id = ?`, id
     ,function (err, results) {
       if (err) { console.log(err) }
-      console.log(results);
+      // console.log(results);
+      return(results);
     }
   );
   // Ends the connection
