@@ -20,17 +20,24 @@
             <img src="resources/logo.jpeg" alt="StraySpotter logo">
             <span>StraySpotter</span>
         </div>
-        <ul class="nav-links">
-            <li class="active"><a href="index.html">Home</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="index.html">Founders</a></li>
-            <li><a href="#summary">Summary</a></li>
+        <button class="toggle-button" id="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="gallery.html">Gallery</a></li>
+            <li><a href="index.html#founders">Founders</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="index.html#summary">Summary</a></li>
         </ul>
-        <div class="upload-icon">
+        <!-- <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-        </div>
+        </div> -->
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
@@ -51,7 +58,6 @@
     <!-- Scripts -->
 
     <script src="script2.js">
-
     </script>
 
     <script>
@@ -86,11 +92,12 @@
         });
     </script>
     
-
-
-
-
-
+    <script>
+        document.getElementById('toggle-button').addEventListener('click', function() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+            });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
