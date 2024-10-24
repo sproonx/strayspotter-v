@@ -14,7 +14,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const currentHash = window.location.hash;
             const navLinks = document.querySelectorAll('.nav-links a');
+
+            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+            if (currentHash === '#founders') {
+                document.getElementById('founders-link').classList.add('active');
+            }  else {
+                document.getElementById('home-link').classList.add('active');
+            }
+            
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
@@ -52,12 +61,17 @@
             <img src="resources/logo.jpeg" alt="StraySpotter logo">
             <span>StraySpotter</span>
         </div>
+        <button class="toggle-button" id="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
         <ul class="nav-links">
-            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#founders">Founders</a></li>
+            <li><a href="index.html#founders">Team</a></li>
             <li><a href="map.html">Map</a></li>
-            <li><a href="#summary">Summary</a></li>
+            <li class="active"><a href="#summary">Report</a></li>
         </ul>
         <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
@@ -68,12 +82,6 @@
         <input type="file" id="file-upload" style="display: none;">
     </nav>
     
-
-
-
-
-
-
 
 
     <main class="report-card">
@@ -89,6 +97,14 @@
             Select a timeframe to view the report.
         </div>
     </main>
+
+    <script src="script2.js"></script>
+    <script>
+        document.getElementById('toggle-button').addEventListener('click', function() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+            });
+    </script>
 
     <script>
         function showReport(timeframe) {
@@ -126,39 +142,7 @@
         }
     </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </main>
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
 </body>
 

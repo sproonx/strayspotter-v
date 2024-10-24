@@ -51,7 +51,7 @@ nav {
     list-style: none;
     margin-left: 15%;
     display: flex;
-    gap: 10%;
+    gap: 40px;
     margin-right: 35%;
 }
 
@@ -276,7 +276,7 @@ header {
 }
 
 .upload-button:hover {
-    background-color: brown;
+    background-color: #ff8447;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -362,17 +362,17 @@ header p {
 
 .gallery {
     /* background-color: #8f9779; */
-    background-color: #3B4013;
+    background-color: #506266;
     text-align: center;
-    height: 70em;
-    padding: 50px 20px;
+    height: 100%;
+    padding: 50px 0px 0px 0px;
  
 }
 
 .gallery h2 {
     color: #fff;
-    font-size: 100px;
-    margin-bottom: 2.5em;
+    font-size: 60px;
+    margin-bottom: 1em;
 }
 
 .gallery-grid {
@@ -397,7 +397,7 @@ header p {
 
 .see-more {
     /* background-color: #8f9779; */
-    background-color: #BF8C60;
+    background-color: #ff6347;
     color: rgb(249, 249, 249);
     border: none;
     padding: 10px 20px;
@@ -406,11 +406,12 @@ header p {
     font-size: xx-large;
     transition: background-color 0.3s, box-shadow 0.3s;
     border-radius: 5px;
-    margin-top: 5em;
+    margin-top: 2em;
+    margin-bottom: 3em;
 }
 
 .see-more:hover {
-    background-color: #ff6347;
+    background-color: #ff8447;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -549,7 +550,7 @@ header p {
 }
 
 footer {
-    background-color: #add8e6;
+    background-color: #34495e;
     text-align: center;
     padding: 20px;
 }
@@ -655,8 +656,11 @@ footer p:hover {
     .purpose-text p {
         margin: 2% 0% 0% 0%;
     }
-}
 
+    .upload-icon {
+        display: none;
+    }
+}
 
 
 .card {
@@ -747,15 +751,13 @@ footer p:hover {
 
 
     .report-card {
-        margin: 10em;
+        margin: 1em;
         background-color: white;
         border-radius: 15px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
         padding: 5em;
         max-width: 100%;
         height: 50em;
-     
-       
     
     
     }
@@ -763,8 +765,8 @@ footer p:hover {
     .report-card h1 {
         color: #4a4a4a;
         text-align: center;
-        margin-bottom: 100px; /* Updated margin-bottom */
-        font-size: 8em; /* Updated font-size */
+        margin-bottom: 1em; /* Updated margin-bottom */
+        font-size: 1.5em; /* Updated font-size */
     }
   
     .button-group {
@@ -774,7 +776,7 @@ footer p:hover {
         margin-bottom: 20px;
     }
     .report-btn {
-        background-color: #6b46c1;
+        background-color: #ff6347;
         color: white;
         width: 10em;
         border: none;
@@ -782,24 +784,25 @@ footer p:hover {
         padding: 15px 20px;
         border-radius: 20px;
         cursor: pointer;
+        margin: 0 auto;
 
         transition: background-color 0.3s;
     }
     .report-btn:hover {
-        background-color: #553c9a;
+        background-color: #ff8447;
     }
     .report-btn.active {
-        background-color: #4c1d95;
+        background-color: #ff8447;
     }
     .report-text {
         background-color: #f8f8f8;
         border: 1px solid #e0e0e0;
         border-radius: 5px;
+        width: 100%;
         padding: 20px; /* Updated padding */
         margin-top: 20px;
         line-height: 1.6; /* Added line-height */
-        padding: 50px 150px;
-        font-size: x-large;
+        font-size: 1.5em;
         /* font-weight: bold; */
         color:#10403B;
     }
@@ -940,14 +943,14 @@ footer p:hover {
 }
 
 .report-header h2 {
-    font-size: 100px;
+    font-size: 60px;
     color: #2c3e50;
     margin-bottom: 70px;
 }
 
 .report-header p {
 
-    font-size: 2.0em;
+    font-size: 1em;
     margin-bottom: 2em;
     color: #34495e;
 }
@@ -991,7 +994,7 @@ footer p:hover {
 .stat-value {
     font-size: 1.3em;
     font-weight: bold;
-    color: #6b46c1;
+    color: #ff6347;
 }
 
 .report-buttons {
@@ -1005,7 +1008,7 @@ footer p:hover {
 }
 
 .report-btn {
-    background-color: #6b46c1;
+    background-color: #ff6347;
     color: white;
     border: none;
     padding: 15px 25px;
@@ -1018,7 +1021,7 @@ footer p:hover {
 }
 
 .report-btn:hover {
-    background-color: #553c9a;
+    background-color: #ff6347;
 }
 
 @media (max-width: 768px) {

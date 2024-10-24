@@ -26,7 +26,8 @@ const access_key_id = process.env.ACCESS_KEY_ID;
 const secret_access_key_id = process.env.SECRET_ACCESS_KEY_ID;
 
 const bucket_name = "catphotos"
-const HOST = "192.168.6.17";
+const HOST = process.env.HOST;
+const DEFAULT_PORT = 3000;
 
 const app = express();
 
@@ -248,7 +249,7 @@ app.get('/download', async (req, res) => {
   });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });

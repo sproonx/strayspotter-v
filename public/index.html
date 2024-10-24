@@ -51,17 +51,17 @@
         <ul class="nav-links" id="nav-links">
             <li id="home-link"><a href="#home">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#founders">Our Team</a></li>
+            <li><a href="#founders">Team</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="report.html">Report</a></li>
 
         </ul>
-        <!-- <div class="upload-icon">
-            <a href="#" onclick="document.getElementById('file-upload').click();">
+        <div class="upload-icon">
+            <a href="#" onclick="openModal()"">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
             
-        </div> -->
+        </div>
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
@@ -177,42 +177,6 @@
     </section>
 
 
-
-
-<!-- Report-->
-
-<!-- <div class="report-section">
-    <h1>Stray Cat Spotted Today</h1>
-    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
-    <button class="report-btn" onclick="showReport('daily')">Daily</button>
-    <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
-    <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
-    <div id="report-popup" class="popup">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p id="report-text"></p>
-    </div>
-    <button class="report-link" onclick="goToReport()">Take me to the report</button>
-</div>
-
- -->
-<!-- 
- <div class="report-section">
-    <img src="resources/cat.png" alt="Stray Cat" class="floating-image">
-    <h1>Stray Cat Spotted Today</h1>
-    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
-    <div class="button-group">
-        <button class="report-btn" onclick="showReport('daily')">Daily</button>
-        <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
-        <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
-    </div>
-    <div id="report-popup" class="popup">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p id="report-text"></p>
-    </div>
-    <button class="report-link" onclick="goToReport()">Take me to the report</button>
-</div>
-<script src="scripts.js"></script> -->
-
 <section class="report-section">
     <div class="report-container">
         <div class="report-header">
@@ -259,11 +223,6 @@
 
 
 
-
-    <section class="summary" id="summary">
-        <h2>Summary</h2>
-        <p>This website helps collect and share images of stray cats. Let’s work together to provide them a better life!</p>
-    </section>
     <footer>
         <p>Follow us on Socials | GitHub</p>
     </footer>
