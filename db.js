@@ -1,91 +1,101 @@
-/*
-Project Title : StraySpotter
-Project Description : A web service that utilizes Wasabi cloud, for people to share stray cat pictures.
-  The data will be analysed to provide the insight of the stray cats.
-Member : KIM JOWOON, ..
-Date Started : 21.10.2024
-Current version : 1.0
-Version date : 23.10.2024
-*/
-
-// Create the connection to database
+// Functions interacting with the database
+module.exports = {
+  insertDataToDB, fetchRecentPhotoID, createDBConnection, countPicturesToday
+}
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Extracted data from the picture
-let data = {
-  latitude : null,
-  longitude : null,
-  date : null,
-  postcode : 123,
-  district_no : 12,
-  district_name : 'TEST',
-  cat_status : 1,
-};
+// THE ADDRESS AND CAT STAUTS TO BE UPDATED
+function insertDataToDB(metadata) {
+  const connection = createDBConnection()
+  let data = {
+    latitude : metadata.latitude,
+    longitude : metadata.longitude,
+    date : metadata.CreateDate ?? "9999-12-30",
+    postcode : 123,
+    district_no : 12,
+    district_name : 'TEST',
+    cat_status : 1,
+  };
 
-const exifr = require('exifr');
-let filename = 'resources/sample_image1.jpg';
-extractMetadata(filename).then(metadata => {
-  data.latitude = metadata.latitude;
-  data.longitude = metadata.longitude;
-  data.date = metadata.GPSDateStamp.replaceAll(':','-');
-  insert_data(data);
-});
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO pictures (latitude, longitude, date_taken, postcode, 
+      district_no, district_name, cat_status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [data.latitude, data.longitude, data.date, data.postcode, data.district_no, data.district_name, data.cat_status],
+      (err, results) => {
+        if (err) { reject(err);} 
+        else { resolve(results.insertId); }
+        connection.end();
+      })
+  })
+}
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// Fuctions 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
- // Extract Metadata from the picture
-async function extractMetadata(file) {
-    try {
-        // Extract all data
-        // let output = await exifr.parse(file, true);
-        let output = await exifr.parse(file, ['GPSLatitude', 'GPSLongitude', 'GPSDateStamp']);
-        if (output === undefined) {
-            console.log("Metadata undefined");
+function fetchRecentPhotoID(number = 4) {
+  const connection = createDBConnection();
+  
+  return new Promise((resolve, reject) => {
+    // A query to fetch recent photo ids from the DB
+    connection.query(
+      `SELECT id FROM pictures ORDER BY id DESC LIMIT ?`, [number],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
         } else {
-            console.log("Data retrieved!: ");
+          resolve(results);
         }
-        return output;
-    } catch (error) {
-        console.error('Error reading metadata:', error);
-        return null;
-    }
+        connection.end();
+      }
+    );
+  });
 }
 
-function insert_data(data) {
-  const connection = createDBConnection()
-  // A query to insert data into table
-  connection.query(
-    `INSERT INTO pictures (latitude, longitude, date_taken, postcode, district_no, district_name, cat_status) 
-    VALUES (` + data.latitude + `, ` + data.longitude + `,'` + data.date + `' ,` 
-              + data.postcode + `,` + data.district_no + `, '` + data.district_name + `' ,` 
-              + data.cat_status + `);`
-    ,function (err, results) {
-      if (err) { console.log(err) }
-      console.log(results);
-    }
-  );
-  // Ends the connection
-  connection.end();
+
+function select_data(id) {
+  return new Promise((resolve, reject) => {
+    const connection = createDBConnection();
+
+    // A query to select data from the table
+    connection.query(
+      `SELECT latitude, longitude FROM pictures WHERE id = ?`, 
+      [id], // Pass `id` as an array for parameter binding
+      function (err, results) {
+        // Ends the connection
+        connection.end();
+        if (err) {
+          return reject(err); // Reject the promise with the error
+        }
+        resolve(results); // Resolve the promise with the results
+      }
+    );
+  });
 }
 
-function select_data() {
-  const connection = createDBConnection()
-  // A query to insert data into table
-  connection.query(
-    `SELECT * FROM pictures`
-    ,function (err, results) {
-      if (err) { console.log(err) }
-      console.log(results);
-    }
-  );
-  // Ends the connection
-  connection.end();
+  
+function countPicturesToday() {
+  const connection = createDBConnection();
+  
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT COUNT(id) as count FROM pictures WHERE date_taken = CURDATE();`,
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+        } else {
+          const count = results[0].count;
+          resolve(count);
+        }
+        connection.end();
+      }
+    );
+  })
 }
 
+//TODO: Instead of reconnecting everytime, cConnect once the app starts
 function createDBConnection() {
   const connection = mysql.createConnection({
     host: 'localhost',

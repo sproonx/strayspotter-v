@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Pictures on Map - Singapore</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #map {
+            height: 325px; /* Set the height of the map */
+            width: 600px; /* Set the width of the map */
+            margin: 0 auto; /* Center the map on the page */
+        }
+        .tooltip-image {
+            width: 150px; /* Set tooltip image width */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo">
+            <span>StraySpotter</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#home">Home</a></li>
+            <li><a href="#upload">Upload</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="#founders">Founders</a></li>
+            <li><a href="#summary">Summary</a></li>
+        </ul>
+        <div class="upload-icon">
+            <a href="#" onclick="document.getElementById('file-upload').click();">
+                <img src="resources/camera_icon.png" alt="Upload">
+            </a>
+        </div>
+        <!-- Add the hidden file input -->
+        <input type="file" id="file-upload" style="display: none;">
+    </nav>
+
+<h1 style="text-align: center;">Cat Pictures on Map - Singapore</h1>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize the map centered on Singapore
+    const map = L.map('map').setView([1.3521, 103.8198], 11); // Singapore coordinates and zoom level
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Set the bounds for Singapore
+    const bounds = [
+        [1.2000, 103.6000], // Southwest corner
+        [1.4600, 104.1000]  // Northeast corner
+    ];
+    map.setMaxBounds(bounds); // Prevent panning outside of these bounds
+    map.on('drag', function() {
+        map.panInsideBounds(bounds);
+    });
+
+    // Restrict zoom levels
+    map.setMaxZoom(19); // Maximum zoom level
+    map.setMinZoom(11); // Minimum zoom level
+
+    // Array of cat pictures with their corresponding latitude and longitude within Singapore
+    const catLocations = [
+        { lat: 1.3521, lon: 103.8198, img: 'https://placekitten.com/200/300' }, // Central Singapore
+        { lat: 1.3960, lon: 103.8341, img: 'https://placekitten.com/201/301' }, // Pasir Ris
+        { lat: 1.2904, lon: 103.8520, img: 'https://placekitten.com/202/302' }, // Marina Bay
+        { lat: 1.3145, lon: 103.8424, img: 'https://placekitten.com/203/303' }  // Bukit Merah
+    ];
+
+    // Add markers to the map
+    // catLocations.forEach(location => {
+    //     const marker = L.marker([location.lat, location.lon]).addTo(map);
+
+    //     // Create an HTML string for the tooltip
+    //     const tooltipContent = `<img src="${location.img}" alt="Cat" class="tooltip-image"/>`;
+        
+    //     // Bind the tooltip to the marker
+    //     marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
+    // });
+
+        
+    async function loadImages() {
+
+        const response = await fetch('/images');
+
+        if (!response.ok) {
+        console.error('Failed to fetch images:', response.statusText);
+        return;
+        }
+
+        const imageKeys = await response.json();
+
+        imageKeys.forEach(async (key) => {
+        const urlResponse = await fetch(`/image-url?key=${key}`);
+        if (urlResponse.ok) {
+
+            urlResponse.json().then(data => {
+
+                const lat_variation = (Math.random() - 0.5) * 0.0001; 
+                const lon_variation = (Math.random() - 0.5) * 0.000005; 
+                latitude = data.latitude*(1+lat_variation); 
+                longitude = data.longitude*(1+lon_variation);
+                url = data.url;
+
+                const marker = L.marker([latitude, longitude]).addTo(map);
+
+                // Create an HTML string for the tooltip
+                const tooltipContent = `<img src="${url}" alt="Cat" class="tooltip-image"/>`;
+            
+                // Bind the tooltip to the marker
+                marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
+            })
+        } else {
+            console.error('Failed to fetch pre-signed URL:', urlResponse.statusText);
+        }
+        });
+
+    };
+
+    loadImages();
+</script>
+
+</body>
+</html>
