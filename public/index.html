@@ -4,8 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StraySpotter</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="styles.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+                    link.parentElement.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+
+<!-- Java script for Upload button -->
+    <script>
+        function openModal() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('uploadModal')) {
+                closeModal();
+            }
+        }
+    </script>
+
+
+
+
 </head>
+
+
 <body>
     <nav>
         <div class="logo">
@@ -14,7 +57,6 @@
         </div>
         <ul class="nav-links">
             <li class="active"><a href="#home">Home</a></li>
-            <li><a href="#upload">Upload</a></li>
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="#founders">Founders</a></li>
             <li><a href="map.html">Map</a></li>
@@ -31,35 +73,85 @@
     
 
     <header id="home">
+      
         <div class="purpose-container">
             <div class="purpose-text">
                 <h1>Who We Are</h1>
-                <p>StraySpotter is dedicated to documenting and protecting stray cats in urban areas.</p>
+                <p>StraySpotter is dedicated to documenting and protecting urban stray cats in Singapore. We collect cat photos, track population density and create reports for supporting conservation, relocation, and humane treatment efforts of cats.</p>
                 
             <div id="upload" class="upload-section">
-                <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
+                <button class="upload-button" onclick="openModal()">Upload</button>
+            </div>
+                <!-- <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
                     <input type="file" id="imageInput" name="image" required /> 
                     <input type="submit" class="upload-button" value="Upload"/>
-                </form>
-            </div>
-            </div>
-
+                </form> -->
             
+            </div>
+          </div>
+         
 
             <div class="purpose-image">
                 <img src="resources/cathead2.png" alt="Interactive Cat">
                 <div class="speech-bubble">Meow! Feed me!</div>
-            <!-- <a href="https://www.flaticon.com/free-icons/camera" title="camera icons">Camera icons created by Freepik - Flaticon</a> -->
             </div>
-        </div>
+        
     </header>
     
 
+    <!--Pop Up-->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Upload Your Cat Photo</h2> 
+            <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
+                <input type="file" id="imageInput" name="image" required />
+                
+                
+                <hr>
+                <h2>Cat Status</h2>
+                <p>Please choose an icon that best matches your cat's condition</p>
+                <div class="radio-buttons">
+                    <label><input type="radio" name="category" value="option1" required> <img src="resources/green_cat2.jpeg" alt="" class="radio-image"></label>
+                    <label><input type="radio" name="category" value="option2"> <img src="resources/yellow_icon.jpeg" alt="" class="radio-image"></label>
+                    <label><input type="radio" name="category" value="option3"> <img src="resources/red_cat_3.jpeg" alt="" class="radio-image"></label>
+                </div>
+                <input type="submit" class="upload-button" value="Upload"/>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('uploadModal')) {
+                closeModal();
+            }
+        }
+    </script>
+
+
+
+<!-- Gallery -->
 
     <section class="gallery" id="gallery" >
         <h2>Gallery</h2>
         <div class="gallery-grid" id="imageContainer"></div>
 
+        <div class="gallery-grid">
+            <img src="resources/gallery_cat1.jpg" alt="Cat 1">
+            <img src="resources/gallery_cat2.jpg" alt="Cat 2">
+            <img src="resources/gallery_cat3.jpeg" alt="Cat 3">
+            <img src="resources/gallery_cat4.jpg" alt="Cat 4">
+        </div>
         <a href="gallery.html"><button class="see-more">See More</button></a>
     </section>
 
@@ -94,13 +186,56 @@
 
 
 
+<!-- Report-->
+
+<!-- <div class="report-section">
+    <h1>Stray Cat Spotted Today</h1>
+    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
+    <button class="report-btn" onclick="showReport('daily')">Daily</button>
+    <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
+    <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
+    <div id="report-popup" class="popup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <p id="report-text"></p>
+    </div>
+    <button class="report-link" onclick="goToReport()">Take me to the report</button>
+</div>
+
+ -->
+
+ <div class="report-section">
+    <img src="resources/cat.png" alt="Stray Cat" class="floating-image">
+    <h1>Stray Cat Spotted Today</h1>
+    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
+    <div class="button-group">
+        <button class="report-btn" onclick="showReport('daily')">Daily</button>
+        <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
+        <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
+    </div>
+    <div id="report-popup" class="popup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <p id="report-text"></p>
+    </div>
+    <button class="report-link" onclick="goToReport()">Take me to the report</button>
+</div>
+<script src="scripts.js"></script>
+
+
+<!-- 
     <section class="summary" id="summary">
         <h2>Summary</h2>
         <p>This website helps collect and share images of stray cats. Let’s work together to provide them a better life!</p>
-    </section>
+    </section> -->
     <footer>
         <p>Follow us on Socials | GitHub</p>
     </footer>
+
+
+
+
+
+
+
 
     <script src="script.js">
         // Add this new code for smooth scrolling
@@ -115,6 +250,13 @@
         });
 
     </script>
+
+
+
+
+
+
+
     
 </body>
 
