@@ -1,6 +1,6 @@
 // Functions interacting with the database
 module.exports = {
-  insertDataToDB, fetchRecentPhotoID, createDBConnection, countPicturesToday
+  insertDataToDB, fetchRecentPhotoID, createDBConnection, countPicturesToday, fetchGPSByID
 }
 const mysql = require('mysql2');
 require('dotenv').config();
@@ -54,7 +54,7 @@ function fetchRecentPhotoID(number = 4) {
 }
 
 
-function select_data(id) {
+function fetchGPSByID(id) {
   return new Promise((resolve, reject) => {
     const connection = createDBConnection();
 

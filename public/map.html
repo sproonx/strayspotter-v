@@ -11,10 +11,18 @@
             height: 325px; /* Set the height of the map */
             width: 600px; /* Set the width of the map */
             margin: 0 auto; /* Center the map on the page */
+            border-radius: 15px;
         }
         .tooltip-image {
-            width: 150px; /* Set tooltip image width */
+            width: 100px; /* Set tooltip image width */
             height: auto;
+        }
+
+        .leaflet-tooltip {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            padding: 6px;
         }
     </style>
 </head>
@@ -26,11 +34,11 @@
             <span>StraySpotter</span>
         </div>
         <ul class="nav-links">
-            <li class="active"><a href="#home">Home</a></li>
-            <li><a href="#upload">Upload</a></li>
+            <li class="active"><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#upload">Upload</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#founders">Founders</a></li>
-            <li><a href="#summary">Summary</a></li>
+            <li><a href="index.html#founders">Founders</a></li>
+            <li><a href="index.html#summary">Summary</a></li>
         </ul>
         <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
@@ -46,19 +54,27 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    // Initialize the map centered on Singapore
-    const map = L.map('map').setView([1.3521, 103.8198], 11); // Singapore coordinates and zoom level
+    COORDINATES = [1.3521, 103.8198];
+    DEFAULT_ZOOM_LEVEL = 11;
+    MIN_ZOOM_LEVEL = 11; // The broadest view you can see
+    MAX_ZOOM_LEVEL = 30; // The smallest detail you can see
+    SOUTH_WEST_CORNER = [1.2000, 103.6000];
+    NORTH_EAST_CORNER = [1.4600, 104.1000] ;
+    MARK_ICON_LOCATION = "./resources/icon.png"
+
+     // Initialize the map centered on Singapore
+     const map = L.map('map').setView(COORDINATES, DEFAULT_ZOOM_LEVEL); // Singapore coordinates and zoom level
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+        maxZoom: MAX_ZOOM_LEVEL,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     // Set the bounds for Singapore
     const bounds = [
-        [1.2000, 103.6000], // Southwest corner
-        [1.4600, 104.1000]  // Northeast corner
+            SOUTH_WEST_CORNER, // Southwest corner
+            NORTH_EAST_CORNER // Northeast corner
     ];
     map.setMaxBounds(bounds); // Prevent panning outside of these bounds
     map.on('drag', function() {
@@ -66,29 +82,10 @@
     });
 
     // Restrict zoom levels
-    map.setMaxZoom(19); // Maximum zoom level
-    map.setMinZoom(11); // Minimum zoom level
+    map.setMaxZoom(MAX_ZOOM_LEVEL); // Maximum zoom level
+    map.setMinZoom(MIN_ZOOM_LEVEL); // Minimum zoom level
 
-    // Array of cat pictures with their corresponding latitude and longitude within Singapore
-    const catLocations = [
-        { lat: 1.3521, lon: 103.8198, img: 'https://placekitten.com/200/300' }, // Central Singapore
-        { lat: 1.3960, lon: 103.8341, img: 'https://placekitten.com/201/301' }, // Pasir Ris
-        { lat: 1.2904, lon: 103.8520, img: 'https://placekitten.com/202/302' }, // Marina Bay
-        { lat: 1.3145, lon: 103.8424, img: 'https://placekitten.com/203/303' }  // Bukit Merah
-    ];
-
-    // Add markers to the map
-    // catLocations.forEach(location => {
-    //     const marker = L.marker([location.lat, location.lon]).addTo(map);
-
-    //     // Create an HTML string for the tooltip
-    //     const tooltipContent = `<img src="${location.img}" alt="Cat" class="tooltip-image"/>`;
-        
-    //     // Bind the tooltip to the marker
-    //     marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
-    // });
-
-        
+    
     async function loadImages() {
 
         const response = await fetch('/images');
@@ -112,13 +109,36 @@
                 longitude = data.longitude*(1+lon_variation);
                 url = data.url;
 
-                const marker = L.marker([latitude, longitude]).addTo(map);
+                const customIcon = L.icon({
+                    iconUrl: MARK_ICON_LOCATION,
+                    iconSize: [38, 95], // size of the icon
+                });
+                
+                const marker = L.marker([latitude, longitude]).addTo(map); //{ icon: customIcon }
 
                 // Create an HTML string for the tooltip
                 const tooltipContent = `<img src="${url}" alt="Cat" class="tooltip-image"/>`;
             
                 // Bind the tooltip to the marker
-                marker.bindTooltip(tooltipContent, { permanent: false, sticky: true }).openTooltip();
+
+                marker.bindTooltip(tooltipContent, { permanent: false, sticky: true });
+
+                // Event listeners to handle tooltip visibility
+                marker.on('mouseover', () => {
+                    if (currentTooltip) {
+                        currentTooltip.closeTooltip(); // Close the currently open tooltip
+                    }
+                    marker.openTooltip(); // Open the new tooltip
+                    currentTooltip = marker; // Set the current marker as the open one
+                });
+
+                marker.on('mouseout', () => {
+                    marker.closeTooltip(); // Optionally close the tooltip on mouse out
+                    currentTooltip = null; // Reset the current tooltip reference
+                });
+                
+
+                
             })
         } else {
             console.error('Failed to fetch pre-signed URL:', urlResponse.statusText);
@@ -128,7 +148,6 @@
     };
 
     loadImages();
-</script>
-
+    </script>
 </body>
 </html>

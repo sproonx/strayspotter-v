@@ -1,47 +1,7 @@
 const imageContainer = document.getElementById('imageContainer');
 const fileInput = document.getElementById('imageInput');
-const TEMP_ACCESS_TOKEN = "5074ed623aefb2"
+const MAX_KEYS_TO_BE_SENT = 4;
 
-function getUserGeolocation(){
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-            console.log(location);
-            return location
-        },
-        (error) => {
-            console.error(`Error getting location: ${error.message}`);
-        }
-    );
-} else {
-    console.log("Geolocation is not supported by this browser.");
-}
-}
-
-function getUserIPLocation(){
-  const url = 'https://ipinfo.io/json?token='+TEMP_ACCESS_TOKEN; // Temporary Access Token
-
-  fetch(url)
-      .then(response => response.json())
-      .then(data => {
-          const location = {
-              ip: data.ip,
-              city: data.city,
-              region: data.region,
-              country: data.country,
-              loc: data.loc, // Latitude and Longitude
-              description: `IP: ${data.ip}, Location: ${data.city}, ${data.region}, ${data.country}`
-          };
-          console.log(location)
-      })
-      .catch(error => {
-          console.error('Error fetching location:', error)
-      });
-}
       
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
   console.log(event);
@@ -58,14 +18,14 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
   });
 
   if (response.ok) {
-  fetchImages(); // Refresh the image list after upload
+  fetchImages(MAX_KEYS_TO_BE_SENT); // Refresh the image list after upload
   } else {
   console.error('Upload failed:', response.statusText);
   }
 });
 
-async function fetchImages() {
-    const response = await fetch('/images');
+async function fetchImages(maxKeys) {
+    const response = await fetch(`/images?maxKeys=${maxKeys}`);
 
     if (!response.ok) {
       console.error('Failed to fetch images:', response.statusText);
@@ -75,11 +35,8 @@ async function fetchImages() {
     const imageKeys = await response.json();
 
     imageContainer.innerHTML = ''; // Clear existing images
-    console.log(imageKeys);
 
-    let location = getUserIPLocation();
-    let selectedKeys = imageKeys.slice(0, 4);
-    selectedKeys.forEach(async (key) => {
+    imageKeys.forEach(async (key) => {
       // Fetch the pre-signed URL for the image
       const urlResponse = await fetch(`/image-url?key=${key}`);
       if (urlResponse.ok) {
@@ -105,6 +62,6 @@ async function fetchImages() {
   }
 
   
-fetchImages()
+fetchImages(MAX_KEYS_TO_BE_SENT);
 
 
