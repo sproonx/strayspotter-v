@@ -1,3 +1,6 @@
+const imageContainer = document.getElementById('imageContainer');
+const fileInput = document.getElementById('imageInput');
+const MAX_KEYS_TO_BE_SENT = 4;
 
 function showReport(type) {
     let reportText = '';
@@ -24,9 +27,6 @@ function goToReport() {
     window.location.href = 'report.html'; // Replace with the actual report page URL
 }
 
-const imageContainer = document.getElementById('imageContainer');
-const fileInput = document.getElementById('imageInput');
-const MAX_KEYS_TO_BE_SENT = 4;
 
       
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {

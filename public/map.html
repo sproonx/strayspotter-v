@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cat Pictures on Map - Singapore</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         #map {
@@ -33,18 +37,24 @@
             <img src="resources/logo.jpeg" alt="StraySpotter logo">
             <span>StraySpotter</span>
         </div>
-        <ul class="nav-links">
-            <li class="active"><a href="index.html#home">Home</a></li>
-            <li><a href="index.html#upload">Upload</a></li>
+        <button class="toggle-button" id="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="index.html#founders">Founders</a></li>
+            <li class="active"><a href="map.html">Map</a></li>
             <li><a href="index.html#summary">Summary</a></li>
         </ul>
-        <div class="upload-icon">
+        <!-- <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-        </div>
+        </div> -->
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
@@ -53,7 +63,16 @@
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
+    document.getElementById('toggle-button').addEventListener('click', function() {
+        const navLinks = document.getElementById('nav-links');
+        navLinks.classList.toggle('active');
+        });
+</script>
+
+<script>
+
     COORDINATES = [1.3521, 103.8198];
     DEFAULT_ZOOM_LEVEL = 11;
     MIN_ZOOM_LEVEL = 11; // The broadest view you can see
@@ -111,10 +130,10 @@
 
                 const customIcon = L.icon({
                     iconUrl: MARK_ICON_LOCATION,
-                    iconSize: [38, 95], // size of the icon
+                    iconSize: [45, 50], // size of the icon
                 });
                 
-                const marker = L.marker([latitude, longitude]).addTo(map); //{ icon: customIcon }
+                const marker = L.marker([latitude, longitude], { icon: customIcon }).addTo(map); //{ icon: customIcon }
 
                 // Create an HTML string for the tooltip
                 const tooltipContent = `<img src="${url}" alt="Cat" class="tooltip-image"/>`;

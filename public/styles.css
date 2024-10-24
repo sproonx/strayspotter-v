@@ -51,7 +51,7 @@ nav {
     list-style: none;
     margin-left: 15%;
     display: flex;
-    gap: 40px;
+    gap: 10%;
     margin-right: 35%;
 }
 
@@ -120,15 +120,15 @@ header {
 
 .purpose-text h1 {
     text-align: left;
-    padding-left: 5em;
-    font-size: 36px;
+    padding-left: 0em;
+    font-size: 40px;
 
     
 }
 
 .purpose-text p {
     font-size: 20px;
-    margin: 2% 43% 0% 4%;
+    margin: 2% 20% 0% 0%;
 
     color: white;
     font-weight: bolder;
@@ -141,9 +141,11 @@ header {
 }
 
 .purpose-image {
-    flex: 1;
-    text-align: right;
-    position: relative;
+    max-width: 50%; /* Ensures image doesn’t exceed 50% of the container width */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Allows margin auto to center the image */
+    position: absolute; /* Change to relative for better responsiveness */
+    right: 0; /* Reset right positioning */
 }
 
 
@@ -248,9 +250,20 @@ header {
     border-color: #ff6347; /* Highlight color */
 }
 
+
+.upload-section {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100px; /* Adjust height as needed */
+    margin: 20px 0; /* Add some margin if necessary */
+}
+
+
 .upload-button {
-    background-color: #ff6347;
+    background-color: #ff6347; /* Tomato color */
     width: 100%;
+    max-width: 300px; /* Optional: Limit max width */
     height: 50px;
     color: white;
     border: none;
@@ -258,6 +271,8 @@ header {
     cursor: pointer;
     border-radius: 12px;
     transition: background-color 0.3s, box-shadow 0.3s;
+    text-align: center; /* Center text */
+    font-weight: bold; /* Make text bold */
 }
 
 .upload-button:hover {
@@ -310,31 +325,6 @@ header {
 
 
 /* for button */
-.upload-section {
-    text-align: center;
-    margin-top: 20px;
-    width: 2px;
-}
-
-.upload-button {
-    background-color: #ff6347;
-    width: 250px;
-    height: 50px;
-    color: white;
-    border: none;
-    padding: auto;
-    margin: 4em;
-    font-size: 30px;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.upload-button:hover {
-    background-color:brown; 
-    box-shadow: 0 0 20px rgba(0, 2, 0, 9);
-}
-
 
 
 header h1 {
@@ -628,6 +618,47 @@ footer p:hover {
     }
 }
 
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide links by default on mobile */
+        flex-direction: column; /* Stack links vertically */
+        width: 100%; /* Full width */
+        background-color: #333; /* Ensure background matches */
+        position: absolute; /* Overlay links */
+        top: 3.9em; /* Position below the nav */
+        left: 0;
+        padding: 5px 0; /* Add padding for spacing */
+        z-index: 1000;
+        
+    }
+    
+
+    .nav-links li {
+        margin: 5px 0; /* Adjust spacing between links */
+    }
+
+    .nav-links.active {
+        display: flex; /* Show links when active */
+    }
+
+    .toggle-button {
+        display: flex; /* Show toggle button on mobile */
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .purpose-image {
+        display: none;
+    }
+
+    .purpose-text p {
+        margin: 2% 0% 0% 0%;
+    }
+}
+
+
+
 .card {
     background-color: #fff;
     border-radius: 0.7rem;
@@ -648,11 +679,10 @@ footer p:hover {
 
 .card-content img {
 
-     width: 100px;
-     height: 150px;
-    /* height: auto;  */
+     width: 100%;
+     height: auto;  
     display: block;
-    padding-bottom:10em;
+    padding-bottom:0;
 }
 
 .card-footer {

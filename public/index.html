@@ -9,12 +9,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="styles.css">
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const currentHash = window.location.hash;
             const navLinks = document.querySelectorAll('.nav-links a');
+
+            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+            if (currentHash === '#founders') {
+                document.getElementById('founders-link').classList.add('active');
+            } else if (currentHash === "#summary"){
+                document.getElementById('summary-link').classList.add('active');
+            } else {
+                document.getElementById('home-link').classList.add('active');
+            }
+            
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
@@ -23,29 +34,6 @@
             });
         });
     </script>
-
-
-<!-- Java script for Upload button -->
-    <script>
-        function openModal() {
-            document.getElementById('uploadModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('uploadModal')) {
-                closeModal();
-            }
-        }
-    </script>
-
-
-
-
 </head>
 
 
@@ -55,18 +43,25 @@
             <img src="resources/logo.jpeg" alt="StraySpotter logo">
             <span>StraySpotter</span>
         </div>
-        <ul class="nav-links">
-            <li class="active"><a href="#home">Home</a></li>
+        <button class="toggle-button" id="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+            <li id="home-link"><a href="#home">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
             <li><a href="#founders">Our Team</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="report.html">Report</a></li>
+
         </ul>
-        <div class="upload-icon">
+        <!-- <div class="upload-icon">
             <a href="#" onclick="document.getElementById('file-upload').click();">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-        </div>
+            
+        </div> -->
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
@@ -104,7 +99,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Upload Your Cat Photo</h2> 
-            <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
+            <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="closeModal()">
                 <input type="file" id="imageInput" name="image" required />
                 
                 
@@ -112,9 +107,9 @@
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
                 <div class="radio-buttons">
-                    <label><input type="radio" name="category" value="option1" required> <img src="resources/green_cat2.jpeg" alt="" class="radio-image"></label>
-                    <label><input type="radio" name="category" value="option2"> <img src="resources/yellow_icon.jpeg" alt="" class="radio-image"></label>
-                    <label><input type="radio" name="category" value="option3"> <img src="resources/red_cat_3.jpeg" alt="" class="radio-image"></label>
+                    <label for="happy"><input type="radio" name="category" id="happy" value="option1"> <img src="resources/green_cat2.jpeg" alt="" class="radio-image"></label>
+                    <label for="normal"><input type="radio" name="category" id="normal" value="option2"><img src="resources/yellow_icon.jpeg" alt="" class="radio-image"></label>
+                    <label for="sad"><input type="radio" name="category" id="sad" value="option3"><img src="resources/red_cat_3.jpeg" alt="" class="radio-image"></label>
                 </div>
                 <input type="submit" class="upload-button" value="Upload"/>
             </form>
@@ -122,6 +117,11 @@
     </div>
 
     <script>
+        
+        document.getElementById('toggle-button').addEventListener('click', function() {
+        const navLinks = document.getElementById('nav-links');
+        navLinks.classList.toggle('active');
+        });
         function openModal() {
             document.getElementById('uploadModal').style.display = 'block';
         }
@@ -145,13 +145,6 @@
     <section class="gallery" id="gallery" >
         <h2>Gallery</h2>
         <div class="gallery-grid" id="imageContainer"></div>
-
-        <div class="gallery-grid">
-            <img src="resources/gallery_cat1.jpg" alt="Cat 1">
-            <img src="resources/gallery_cat2.jpg" alt="Cat 2">
-            <img src="resources/gallery_cat3.jpeg" alt="Cat 3">
-            <img src="resources/gallery_cat4.jpg" alt="Cat 4">
-        </div>
         <a href="gallery.html"><button class="see-more">See More</button></a>
     </section>
 
@@ -266,11 +259,11 @@
 
 
 
-<!-- 
+
     <section class="summary" id="summary">
         <h2>Summary</h2>
         <p>This website helps collect and share images of stray cats. Let’s work together to provide them a better life!</p>
-    </section> -->
+    </section>
     <footer>
         <p>Follow us on Socials | GitHub</p>
     </footer>
