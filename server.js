@@ -139,7 +139,6 @@ function uploadData(fileData, res, unique_id) {
 
 
 
-
 app.use(express.static(path.join(__dirname, client_folder_name)));
 
 app.get('/', (req, res) => {
@@ -206,22 +205,36 @@ app.get('/images', async (req, res) => {
 
     const { key } = req.query;
 
-    if (!key) {
-      return res.status(400).send('Key is required');
-    }
-  
-    const params = {
-      Bucket: bucket_name,
-      Key: key,
-      Expires: 60 * 5, // URL expiration time in seconds
-    };
-  
-    try {
-      const url = await getSignedUrl(s3Client, new GetObjectCommand(params));
-      res.json({ url });
-    } catch (err) {
-      return res.status(500).send(err.message);
-    }
+    select_data(key.slice(1)).then(data => {
+      // Process the returned data here
+
+      data_latitude = data[0].latitude ?? ""
+      data_longitude = data[0].longitude ?? ""
+      if (!key) {
+        return res.status(400).send('Key is required');
+      }
+    
+      const params = {
+        Bucket: bucket_name,
+        Key: key,
+        Expires: 60 * 5, // URL expiration time in seconds
+      };
+    
+      try {
+        getSignedUrl(s3Client, new GetObjectCommand(params)).then(url => {
+          res.json({
+            url: url,
+            latitude: data_latitude,
+            longitude: data_longitude
+        })
+      });
+      } catch (err) {
+        return res.status(500).send(err.message);
+      }
+    }).catch(error => {
+      // Handle any errors from select_data
+      console.error('Error fetching data:', error);
+    });
   });
 
 // Handle the download

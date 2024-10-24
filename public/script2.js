@@ -56,8 +56,10 @@ async function loadImages() {
   imageKeys.forEach(async (key) => {
     const urlResponse = await fetch(`/image-url?key=${key}`);
     if (urlResponse.ok) {
-        const { url } = await urlResponse.json();
-        galleryGrid.innerHTML += createGalleryItem(url);
+        urlResponse.json().then( data => {
+            console.log(data);
+            galleryGrid.innerHTML += createGalleryItem(data.url);
+        })
     } else {
         console.error('Failed to fetch pre-signed URL:', urlResponse.statusText);
     }

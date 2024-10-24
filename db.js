@@ -53,6 +53,28 @@ function fetchRecentPhotoID(number = 4) {
   });
 }
 
+
+function select_data(id) {
+  return new Promise((resolve, reject) => {
+    const connection = createDBConnection();
+
+    // A query to select data from the table
+    connection.query(
+      `SELECT latitude, longitude FROM pictures WHERE id = ?`, 
+      [id], // Pass `id` as an array for parameter binding
+      function (err, results) {
+        // Ends the connection
+        connection.end();
+        if (err) {
+          return reject(err); // Reject the promise with the error
+        }
+        resolve(results); // Resolve the promise with the results
+      }
+    );
+  });
+}
+
+  
 function countPicturesToday() {
   const connection = createDBConnection();
   
