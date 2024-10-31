@@ -202,8 +202,8 @@ return new Promise((resolve, reject) => {
 
 // returns in a format {postcode, districtNo, districtName}
 async function GPStoAddress(latitude, longitude) {
-  try {
-      const postcode = await reverseGeocoding(latitude, longitude);
+  try { 
+        const postcode = await reverseGeocoding(latitude, longitude);
         const districtData = postalData[postcode.substring(0,2)];
         return {postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName};
       

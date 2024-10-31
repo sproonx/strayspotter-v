@@ -55,6 +55,11 @@ app.post('/upload', async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file selected!');
     }
+
+    if (!req.file.mimetype.startsWith('image/')){
+      console.log("IT IS NOT AN IMAGE");
+      return null;
+    }
     
     // Converting heic to jpg with metadata
     let exifData = await exifr.parse(req.file.buffer);
