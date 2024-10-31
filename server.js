@@ -14,28 +14,20 @@ const multer = require('multer');
 const { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand, CreatePresignedUrlCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const path = require('path');
-const {Readable} = require('stream');
-const crypto = require('crypto');
 const exifr = require('exifr');
 const heicConvert = require('heic-convert');
-const { insertDataToDB, fetchGPSByID } = require('./db.js');
-
+const { insertDataToDB, fetchRecentPhotoID, createDBConnection, countPicturesToday, fetchGPSByID, GPStoAddress, reverseGeocoding, countPicturesLocation, createReport } = require('./db.js');
 require('dotenv').config();
 
 const access_key_id = process.env.ACCESS_KEY_ID;
 const secret_access_key_id = process.env.SECRET_ACCESS_KEY_ID;
-
 const bucket_name = "catphotos"
 const HOST = process.env.HOST;
 const DEFAULT_PORT = 3000;
-
 const app = express();
-
 const storage = multer.memoryStorage(); // Store file in memory
 const upload = multer({ storage: storage }).single('image'); // Name of the input field
 const client_folder_name = "public";
-
-var fileData;
 
 const s3Client = new S3Client({
   region: 'ap-southeast-1', // Region, adjust as needed
@@ -46,78 +38,7 @@ const s3Client = new S3Client({
   },
 });
 
-
-async function convertHeicToJpg(inputBuffer) {
-
-  // Extract EXIF data
-  // const exifData = await exifr.parse(inputBuffer);
-
-  // Convert HEIC to JPG
-  const jpgBuffer = await heicConvert({
-      buffer: inputBuffer,
-      format: 'JPEG', // Output format
-      quality: 1, // Quality from 0 to 1
-  });
-
-  // Optionally, you can write EXIF data back to the JPG file
-  // (Use a library like exiftool-vendored for writing)
-
-  // const tempJpgPath = tmp.tmpNameSync({ postfix: '.jpg' });
-    
-  // try {
-  //     // Write the original JPEG buffer to the temporary file
-  //     fs.writeFileSync(tempJpgPath, jpgBuffer);
-
-  //     // Write the EXIF data to the temporary file
-  //     await exiftool.write(tempJpgPath, exifData);
-
-  //     // Read the modified JPEG file back into a buffer
-  //     const modifiedJpegBuffer = fs.readFileSync(tempJpgPath);
-
-  //     return modifiedJpegBuffer; // Return the modified JPEG buffer
-  // } finally {
-  //     // Cleanup: remove the temporary file
-  //     fs.unlinkSync(tempJpgPath);
-  // }
-
-  return jpgBuffer; // Return the JPG buffer
-}
-
-// Function to create a 32-bit hash from a string
-function create32BitHash(input) {
-  // Create a SHA-256 hash of the input
-  const hash = crypto.createHash('sha256');
-  hash.update(input);
-
-  // Get the full hash as a Buffer
-  const fullHash = hash.digest();
-
-  // Convert the first 4 bytes (32 bits) of the hash to a hexadecimal string
-  const thirtyTwoBitHash = fullHash.readUInt32BE(0).toString(16).padStart(8, '0');
-
-  return thirtyTwoBitHash;
-}
-
-function uploadData(fileData, res, unique_id) {
-
-    console.log(fileData);
-    // const providedFilename = req.body.filename; - For user input / Not used anyomre
-    const params = {
-      Bucket: bucket_name, // Your Wasabi bucket name
-      Key: unique_id, // File name in S3
-      Body: fileData,
-    };
-
-    try {
-      const command = new PutObjectCommand(params);
-      const data = s3Client.send(command);
-      res.send(`File uploaded successfully at https://${bucket_name}.s3.wasabisys.com/${params.Key}`);
-    } catch (s3Err) {
-      return res.status(500).send(s3Err.message);
-    }
-}
-
-
+var fileData;
 
 app.use(express.static(path.join(__dirname, client_folder_name)));
 
@@ -135,33 +56,59 @@ app.post('/upload', async (req, res) => {
       return res.status(400).send('No file selected!');
     }
     
-
-    // TO be deleted, generating temporary file name
-    // const providedFilename = req.file.originalname;
-    // let unique_id = create32BitHash(providedFilename);
-
     // Converting heic to jpg with metadata
-
-    const exifData = await exifr.parse(req.file.buffer);
+    let exifData = await exifr.parse(req.file.buffer);
     console.log(exifData);
-    insertDataToDB(exifData).then(picture_id => {
-      console.log(picture_id); 
+    if (exifData === undefined || exifData === null)
+      {
+        var extractedData = {latitude:"0",longitude:"0"}
 
-      if (req.file.mimetype == 'image/heic'){
-        fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
+        result = "Null"
+
+        insertDataToDB(extractedData, result).then(picture_id => {
+          console.log(picture_id); 
+  
+          if (req.file.mimetype == 'image/heic') {
+            fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
+                uploadData(fileData, res, 'k' + picture_id)  
+            })
+          } else if (req.file.mimetype.startsWith('image/')) { 
+            fileData = req.file.buffer
             uploadData(fileData, res, 'k' + picture_id)  
-        })
-      } else { 
-        fileData = req.file.buffer
-        uploadData(fileData, res, 'k' + picture_id)  
+          } else {
+            console.log("IT IS NOT AN IMAGE")
+          }
+        }).catch(err => {
+          console.error("Error inserting data:", err);
+        });
+      } 
+    
+    else {
+      extractedData = {
+        latitude: exifData.latitude, longitude: exifData.longitude
       }
-    }).catch(err => {
-      console.error("Error inserting data:", err);
-    });
-
-  });
+    
+      GPStoAddress(extractedData.latitude, extractedData.longitude).then(result => {
+        insertDataToDB(extractedData, result).then(picture_id => {
+          console.log(picture_id); 
+  
+          if (req.file.mimetype == 'image/heic') {
+            fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
+                uploadData(fileData, res, 'k' + picture_id)  
+            })
+          } else if (req.file.mimetype.startsWith('image/')) { 
+            fileData = req.file.buffer
+            uploadData(fileData, res, 'k' + picture_id)  
+          } else {
+            console.log("IT IS NOT AN IMAGE")
+          }
+        }).catch(err => {
+          console.error("Error inserting data:", err);
+        });
+      });
+    }
+      });
 });
-
 
 // List images in the bucket
 app.get('/images', async (req, res) => {
@@ -169,9 +116,7 @@ app.get('/images', async (req, res) => {
       Bucket: bucket_name,
     };
 
-    console.log(req.query);
     const maxKeys = req.query.maxKeys;
-    console.log(maxKeys);
     try {
       const command = new ListObjectsV2Command(params);
       const data = await s3Client.send(command);
@@ -198,8 +143,14 @@ app.get('/images', async (req, res) => {
     fetchGPSByID(key.slice(1)).then(data => {
       // Process the returned data here
 
-      data_latitude = data[0].latitude ?? ""
-      data_longitude = data[0].longitude ?? ""
+      if (!data[0]){
+        data_latitude = "";
+        data_longitude = "";
+      } else {
+        data_latitude = data[0].latitude 
+        data_longitude = data[0].longitude
+      }
+    
       if (!key) {
         return res.status(400).send('Key is required');
       }
@@ -227,29 +178,60 @@ app.get('/images', async (req, res) => {
     });
   });
 
-// Handle the download
-app.get('/download', async (req, res) => {
-    const { key } = req.query; // Get the file key from query params
-  
-    const params = {
-      Bucket: bucket_name, // Your Wasabi bucket name
-      Key: key, // File key to download
-    };
-  
-    try {
-      const command = new GetObjectCommand(params);
-      const { Body } = await s3Client.send(command);
-  
-      // Stream the file to the response
-      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(key)}"`);
-      Body.pipe(res);
-    } catch (s3Err) {
-      return res.status(500).send(s3Err.message);
-    }
+  app.get('/report', async (req, res) => {
+
+    const { method } = req.query;
+
+      if (!method) {
+        return res.status(400).send('Key is required');
+      }
+    
+      try {
+        createReport(method).then(reportData => {
+          res.json(reportData);
+        });
+
+      } catch (err) {
+        return res.status(500).send(err.message);
+      }
+    
   });
+
 
 // Start the server
 const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
+
+//FUNCTIONS///////////////////////////////////////////////////////////////////////////////////////
+async function convertHeicToJpg(inputBuffer) {
+  const jpgBuffer = await heicConvert({
+      buffer: inputBuffer,
+      format: 'JPEG', // Output format
+      quality: 1, // Quality from 0 to 1
+  });
+
+  return jpgBuffer; // Return the JPG buffer
+}
+
+//Upload data to Wasabi
+function uploadData(fileData, res, unique_id) {
+    const params = {
+      Bucket: bucket_name, // Your Wasabi bucket name
+      Key: unique_id, // File name in S3
+      Body: fileData,
+    };
+
+    try {
+      const command = new PutObjectCommand(params);
+      const data = s3Client.send(command);
+      res.send(`File uploaded successfully at https://${bucket_name}.s3.wasabisys.com/${params.Key}`);
+    } catch (s3Err) {
+      return res.status(500).send(s3Err.message);
+    }
+}
+
+function exifConstructor () {
+  const exif = {}
+}
