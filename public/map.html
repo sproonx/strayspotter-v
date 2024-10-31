@@ -16,6 +16,7 @@
             max-width: 70%; /* Set the width of the map */
             margin: 0 auto; /* Center the map on the page */
             border-radius: 15px;
+            border: 5px solid #333; /* Combined border properties */
         }
         .tooltip-image {
             width: 100px; /* Set tooltip image width */
@@ -34,7 +35,7 @@
 
     <nav>
         <div class="logo">
-            <img src="resources/logo.jpeg" alt="StraySpotter logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo" style="height: 60px;">
             <span>StraySpotter</span>
         </div>
         <button class="toggle-button" id="toggle-button">
@@ -46,20 +47,21 @@
         <ul class="nav-links" id="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="index.html#founders">Founders</a></li>
+            <li><a href="index.html#founders">Team</a></li>
             <li class="active"><a href="map.html">Map</a></li>
-            <li><a href="index.html#summary">Summary</a></li>
+            <li><a href="report.html">Report</a></li>
         </ul>
-        <!-- <div class="upload-icon">
-            <a href="#" onclick="document.getElementById('file-upload').click();">
+        <div class="upload-icon">
+            <a href="index.html"">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-        </div> -->
+        </div>
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
-
-<h1 style="text-align: center;">Cat Pictures on Map - Singapore</h1>
+<div class="cat-picture">
+    <h1 class="cat-picture" style="text-align: center;">Cat Pictures on Map - Singapore</h1>
+</div>
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

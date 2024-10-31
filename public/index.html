@@ -20,8 +20,6 @@
             navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
             if (currentHash === '#founders') {
                 document.getElementById('founders-link').classList.add('active');
-            } else if (currentHash === "#summary"){
-                document.getElementById('summary-link').classList.add('active');
             } else {
                 document.getElementById('home-link').classList.add('active');
             }
@@ -40,7 +38,7 @@
 <body>
     <nav>
         <div class="logo">
-            <img src="resources/logo.jpeg" alt="StraySpotter logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo" style="height: 60px;">
             <span>StraySpotter</span>
         </div>
         <button class="toggle-button" id="toggle-button">
@@ -51,17 +49,17 @@
         <ul class="nav-links" id="nav-links">
             <li id="home-link"><a href="#home">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="#founders">Our Team</a></li>
+            <li id="founders-link"><a href="#founders">Team</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="report.html">Report</a></li>
 
         </ul>
-        <!-- <div class="upload-icon">
-            <a href="#" onclick="document.getElementById('file-upload').click();">
+        <div class="upload-icon">
+            <a href="#" onclick="openModal()"">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
             
-        </div> -->
+        </div>
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
@@ -71,11 +69,15 @@
       
         <div class="purpose-container">
             <div class="purpose-text">
-                <h1>Who We Are</h1>
-                <p>StraySpotter is dedicated to documenting and protecting urban stray cats in Singapore. We collect cat photos, track population density and create reports for supporting conservation, relocation, and humane treatment efforts of cats.</p>
+                <h1>Share your love for neighborhood cats!</h1>
+                
+                <p>
+
+                    Stray Spotter is a platform for cat lovers to share photos of neighborhood cats with fellow enthusiasts! By gathering data from these shared images, the platform provides insights into the status of stray cats, helping to support them and promote harmony between cats and their communities.
+                </p>
                 
             <div id="upload" class="upload-section">
-                <button class="upload-button" onclick="openModal()">Upload</button>
+                <button class="upload-button" onclick="openModal()">Share Pictures</button>
             </div>
                 <!-- <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
                     <input type="file" id="imageInput" name="image" required /> 
@@ -150,68 +152,48 @@
 
 
     <section class="founders" id="founders">
-        <h2>Our Founders</h2>
+        <h2>Our Team</h2>
         <div class="founders-grid">
             <div class="founder">
-                <img src="resources/cathead2.png" alt="Alex">
-                <h3>Alex</h3>
-                <p> Co-founder & CEO</p>
-                <p class="bio">heyyy</p>
+                <img src="resources/alex.jpg" alt="Alex">
+                <h3>Min Thiha Khine (Alex)</h3>
+                <p>Frontend Developer</p>
+                <p class="bio">JCU Bachelor of Information Technology</p>
+                <ul>
+                    <li>Client-sided web development</li>
+                    <li>Developed Frontend through HTML,CSS, JS</li>
+                    <li>Optimized visuals and user interactions </li>
+                </ul>
             </div>
 
             
             <div class="founder">
-                <img src="resources/cathead2.png" alt="John">
+                <img src="resources/jowoon.jpg" alt="John">
                 
-                <h3>John</h3>
-                <p>Co-founder & CTO</p>
-                <p class="bio">hi</p>
+                <h3>Jowoon Kim (John)</h3>
+                <p>Project Manager & Backend Developer</p>
+                <p class="bio">JCU Master of information technology</p>
+                <ul>
+                    <li>Team management</li>
+                    <li>Database development</li>
+                    <li>Data report handling</li>
+                    <li>Data tracking</li>
+                </ul>
             </div>
             <div class="founder">
-                <img src="resources/cathead2.png" alt="Kelvin">
-                <h3>Kelvin</h3>
-                <p>Co-founder & COO</p>
-                <p class="bio">hello</p>
+                <img src="resources/kelvin.jpg" alt="Kelvin">
+                <h3>Kaung Myat Kyaw (Kelvin)</h3>
+                <p>Server & Cloud API Developer</p>
+                <p class="bio">JCU Bachelor of Information Technology</p>
+                <ul>
+                    <li>Node.js & express.js web server</li>
+                    <li>API & Data handling with both client-side web & database</li>
+                    <li>Map marking using metadata</li>
+                </ul>
             </div>
         </div>
     </section>
 
-
-
-
-<!-- Report-->
-
-<!-- <div class="report-section">
-    <h1>Stray Cat Spotted Today</h1>
-    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
-    <button class="report-btn" onclick="showReport('daily')">Daily</button>
-    <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
-    <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
-    <div id="report-popup" class="popup">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p id="report-text"></p>
-    </div>
-    <button class="report-link" onclick="goToReport()">Take me to the report</button>
-</div>
-
- -->
-<!-- 
- <div class="report-section">
-    <img src="resources/cat.png" alt="Stray Cat" class="floating-image">
-    <h1>Stray Cat Spotted Today</h1>
-    <p>There are <span id="stray-count">25</span> strays spotted today.</p>
-    <div class="button-group">
-        <button class="report-btn" onclick="showReport('daily')">Daily</button>
-        <button class="report-btn" onclick="showReport('weekly')">Weekly</button>
-        <button class="report-btn" onclick="showReport('monthly')">Monthly</button>
-    </div>
-    <div id="report-popup" class="popup">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <p id="report-text"></p>
-    </div>
-    <button class="report-link" onclick="goToReport()">Take me to the report</button>
-</div>
-<script src="scripts.js"></script> -->
 
 <section class="report-section">
     <div class="report-container">
@@ -224,19 +206,15 @@
                 <h3>Current Statistics</h3>
                 <div class="stat-item">
                     <p class="stat-label">Strays Spotted Today:</p>
-                    <p class="stat-value">25</p>
+                    <p class="stat-value" id="today">3</p>
                 </div>
                 <div class="stat-item">
                     <p class="stat-label">Weekly Total:</p>
-                    <p class="stat-value">87</p>
+                    <p class="stat-value" id="week">12</p>
                 </div>
                 <div class="stat-item">
                     <p class="stat-label">Monthly Total:</p>
-                    <p class="stat-value">342</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Cats Helped This Month:</p>
-                    <p class="stat-value">57</p>
+                    <p class="stat-value" id="month">12</p>
                 </div>
             </div>
             <div class="report-buttons">
@@ -259,13 +237,10 @@
 
 
 
-
-    <section class="summary" id="summary">
-        <h2>Summary</h2>
-        <p>This website helps collect and share images of stray cats. Let’s work together to provide them a better life!</p>
-    </section>
     <footer>
+        <p> &copy; Copyright 2024. All Rights Reserved</p>
         <p>Follow us on Socials | GitHub</p>
+
     </footer>
 
 
@@ -288,6 +263,42 @@
         });
 
     </script>
+
+<script>
+
+    // console.log(showTotalNumberOfCats("day"));
+    // document.querySelector(`.stat-value-today`).innerHTML = showTotalNumberOfCats("day");
+    // document.querySelector(`.stat-value-week`).innerHTML = showTotalNumberOfCats("week");
+    // document.querySelector(`.stat-value-month`).innerHTML = showTotalNumberOfCats("month");
+
+    function sumNumbersInString(s) {
+        // Use a regular expression to find all numbers in the string
+        const numbers = s.match(/\d+/g);
+        // If no numbers are found, return 0
+        if (!numbers) return 0;
+        // Convert strings to integers and sum them up
+        const total = numbers.reduce((sum, num) => sum + parseInt(num, 10), 0);0
+        return total;
+    }
+
+    function showTotalNumberOfCats(timeframe) {
+        let text = '';
+        let newCount = 0;
+        // console.log(`/report?method=${timeframe}`);
+
+        fetch(`/report?method=${timeframe}`).then(urlResponse => {
+           
+            if (urlResponse.ok) {
+                urlResponse.json().then(reportData => {
+                    console.log(reportData);
+                    return sumNumbersInString(reportData); // Total number of cats
+                })
+            }
+        })
+
+    }
+</script>
+
 
 
 
