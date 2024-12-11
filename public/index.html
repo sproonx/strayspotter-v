@@ -4,44 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StraySpotter</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet"> -->
+    <meta name="description" content="StraySpotter: A platform for cat lovers to share and report stray cats in their neighborhoods.">
+    <meta name="keywords" content="cats, strays, community, photography">
+    
     <link rel="stylesheet" href="styles.css">
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentHash = window.location.hash;
-            const navLinks = document.querySelectorAll('.nav-links a');
-
-            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-            if (currentHash === '#founders') {
-                document.getElementById('founders-link').classList.add('active');
-            } else {
-                document.getElementById('home-link').classList.add('active');
-            }
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-                    link.parentElement.classList.add('active');
-                });
-            });
-        });
-    </script>
 </head>
 
-
 <body>
-    <nav>
-        <div class="logo">
-            <img src="resources/logo.jpeg" alt="StraySpotter logo" style="height: 60px;">
+    <nav aria-label = "Main Navigation">
+
+        <a href="index.html" class="logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo" class="logo-img">
             <span>StraySpotter</span>
-        </div>
-        <button class="toggle-button" id="toggle-button">
+        </a>
+
+        <!-- Old code -->
+        <!-- <div class="logo">
+            <a href="index.html">
+                <img src="resources/logo.jpeg" alt="StraySpotter logo" class="logo-img">
+                <span>StraySpotter</span>
+            </a>
+        </div> -->
+
+        <button class="toggle-button" id="toggle-button" aria-label="Toggle navigation menu">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -52,10 +41,9 @@
             <li id="founders-link"><a href="#founders">Team</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="report.html">Report</a></li>
-
         </ul>
         <div class="upload-icon">
-            <a href="#" onclick="openModal()"">
+            <a href="#" onclick="openModal()">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
             
@@ -65,28 +53,20 @@
     </nav>
     
 
+    
     <header id="home">
       
         <div class="purpose-container">
             <div class="purpose-text">
                 <h1>Share your love for neighborhood cats!</h1>
-                
                 <p>
-
                     Stray Spotter is a platform for cat lovers to share photos of neighborhood cats with fellow enthusiasts! By gathering data from these shared images, the platform provides insights into the status of stray cats, helping to support them and promote harmony between cats and their communities.
                 </p>
-                
-            <div id="upload" class="upload-section">
-                <button class="upload-button" onclick="openModal()">Share Pictures</button>
-            </div>
-                <!-- <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
-                    <input type="file" id="imageInput" name="image" required /> 
-                    <input type="submit" class="upload-button" value="Upload"/>
-                </form> -->
-            
+                <div id="upload" class="upload-section">
+                    <button class="upload-button" onclick="openModal()">Share Pictures</button>
+                </div>
             </div>
           </div>
-         
 
             <div class="purpose-image">
                 <img src="resources/cathead2.png" alt="Interactive Cat">
@@ -103,8 +83,6 @@
             <h2>Upload Your Cat Photo</h2> 
             <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="closeModal()">
                 <input type="file" id="imageInput" name="image" required />
-                
-                
                 <hr>
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
@@ -117,30 +95,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        
-        document.getElementById('toggle-button').addEventListener('click', function() {
-        const navLinks = document.getElementById('nav-links');
-        navLinks.classList.toggle('active');
-        });
-        function openModal() {
-            document.getElementById('uploadModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('uploadModal')) {
-                closeModal();
-            }
-        }
-    </script>
-
-
 
 <!-- Gallery -->
 
@@ -225,15 +179,6 @@
     </div>
 </section>
 
-<!-- ... (rest of the content remains unchanged) ... -->
-
-<script>
-    function showReport(timeframe) {
-        // This function can be implemented to show different reports
-        // For now, it just alerts the user
-        alert(`Showing ${timeframe} report. This feature is coming soon!`);
-    }
-</script>
 
 
 
@@ -243,71 +188,11 @@
 
     </footer>
 
-
-
-
-
-
-
-
-    <script src="script.js">
-        // Add this new code for smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-    
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-    </script>
-
-<script>
-
-    // console.log(showTotalNumberOfCats("day"));
-    // document.querySelector(`.stat-value-today`).innerHTML = showTotalNumberOfCats("day");
-    // document.querySelector(`.stat-value-week`).innerHTML = showTotalNumberOfCats("week");
-    // document.querySelector(`.stat-value-month`).innerHTML = showTotalNumberOfCats("month");
-
-    function sumNumbersInString(s) {
-        // Use a regular expression to find all numbers in the string
-        const numbers = s.match(/\d+/g);
-        // If no numbers are found, return 0
-        if (!numbers) return 0;
-        // Convert strings to integers and sum them up
-        const total = numbers.reduce((sum, num) => sum + parseInt(num, 10), 0);0
-        return total;
-    }
-
-    function showTotalNumberOfCats(timeframe) {
-        let text = '';
-        let newCount = 0;
-        // console.log(`/report?method=${timeframe}`);
-
-        fetch(`/report?method=${timeframe}`).then(urlResponse => {
-           
-            if (urlResponse.ok) {
-                urlResponse.json().then(reportData => {
-                    console.log(reportData);
-                    return sumNumbersInString(reportData); // Total number of cats
-                })
-            }
-        })
-
-    }
-</script>
-
-
-
-
-
-
-
-
+<!-- SCRIPTS ------------------------------------------------------------------------------->
+<script src="script.js"></script>
     
 </body>
-
-
 </html>
+
+
+
