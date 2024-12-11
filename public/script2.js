@@ -2,22 +2,21 @@ const galleryGrid = document.getElementById('galleryGrid');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
 const MAX_KEYS_TO_BE_SENT = 100;
 
-//   const images = [
-//     { id: 1, src: '/placeholder.svg?height=400&width=400', likes: 120, comments: 15 },
-//     { id: 2, src: '/placeholder.svg?height=400&width=400', likes: 85, comments: 8 },
-//     { id: 3, src: '/placeholder.svg?height=400&width=400', likes: 200, comments: 32 },
-//     { id: 4, src: '/placeholder.svg?height=400&width=400', likes: 150, comments: 20 },
-//     { id: 5, src: '/placeholder.svg?height=400&width=400', likes: 95, comments: 12 },
-//     { id: 6, src: '/placeholder.svg?height=400&width=400', likes: 180, comments: 25 },
-// ];
 
 
+// This function generates an HTML string representing a gallery item (image card) 
+// based on the provided image source (src).
+
+// The function returns a template literal that creates a card layout with an image and action buttons.
+// Action buttons include "Like", "Comment", "Share", and "Bookmark", each represented by an SVG icon.
+// The number of likes and comments is displayed next to their respective buttons, defaulting to 0 if no values are provided.
 function createGalleryItem(src) {
     return `
         <div class="card">
             <div class="card-content">
                 <img src="${src}" alt="Cat ${"Cat Image"}">
             </div>
+            
             <div class="card-footer">
                 <div class="action-buttons">
                     <button aria-label="Like">
@@ -42,6 +41,32 @@ function createGalleryItem(src) {
     `;
 }
 
+
+// Replace that monstrosity with this
+
+function createGalleryItem(src) {
+    return `
+        <div class="card">
+            <div class="card-content">
+                <img src="${src}" alt="Cat Image">
+            </div>
+        </div>
+    `;
+}
+
+
+
+
+
+
+// Purpose:  fetches images from the server and updates the gallery.
+
+// It sends a GET request to /images with a query parameter maxKeys to limit the number of image keys fetched.
+// If the response is not OK, it logs an error message.
+// If successful, it parses the response as JSON to get an array of image keys.
+// For each image key, it sends another fetch request to get the pre-signed URL for that image.
+// If the URL request is successful, it calls createGalleryItem(data.url) to generate the HTML 
+// for the image and appends it to the galleryGrid.
 async function loadImages(maxKeys) {
 
   const response = await fetch(`/images?maxKeys=${maxKeys}`);
@@ -68,9 +93,20 @@ async function loadImages(maxKeys) {
 }
 
 
+// Purpose: This block adds a click event listener to the loadMoreBtn.
+// Functionality: When the button is clicked, it currently shows an alert. 
+// logic to load more images from the server would be implemented.
+
 loadMoreBtn.addEventListener('click', () => {
     // In a real application, this would load more images from a server
     alert('Load more images functionality would be implemented here.');
 });
 
+// Current Functionality: As it stands, it only shows an alert indicating that the functionality to
+// load more images is not yet implemented.
+// Removable
+
 loadImages(MAX_KEYS_TO_BE_SENT);
+
+//  loadImages function when the script first runs, fetching and displaying the
+//  initial set of images based on the maximum keys defined (MAX_KEYS_TO_BE_SENT).
