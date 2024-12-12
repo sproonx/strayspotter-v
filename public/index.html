@@ -22,13 +22,6 @@
             <span>StraySpotter</span>
         </a>
 
-        <!-- Old code -->
-        <!-- <div class="logo">
-            <a href="index.html">
-                <img src="resources/logo.jpeg" alt="StraySpotter logo" class="logo-img">
-                <span>StraySpotter</span>
-            </a>
-        </div> -->
 
         <button class="toggle-button" id="toggle-button" aria-label="Toggle navigation menu">
             <span class="bar"></span>
@@ -86,10 +79,24 @@
                 <hr>
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
+
+
+
                 <div class="radio-buttons">
-                    <label for="happy"><input type="radio" name="category" id="happy" value="option1"> <img src="resources/green_cat2.jpeg" alt="" class="radio-image"></label>
-                    <label for="normal"><input type="radio" name="category" id="normal" value="option2"><img src="resources/yellow_icon.jpeg" alt="" class="radio-image"></label>
-                    <label for="sad"><input type="radio" name="category" id="sad" value="option3"><img src="resources/red_cat_3.jpeg" alt="" class="radio-image"></label>
+                    <label for="happy" >
+                       <input type="radio" name="category" id="happy" value="option1">
+                        <img src="resources/happy.png" alt="Happy" class="radio-image">
+                    </label>
+
+            
+                    <label for="normal">
+                        <input type="radio" name="category" id="normal" value="option2">
+                        <img src="resources/worry.png" alt="Normal" class="radio-image">
+                    </label>
+                    <label for="sad">
+                        <input type="radio" name="category" id="sad" value="option3">
+                        <img src="resources/cry.png" alt="Sad" class="radio-image">
+                    </label>
                 </div>
                 <input type="submit" class="upload-button" value="Upload"/>
             </form>
