@@ -1,13 +1,36 @@
-/*
-Project Title : StraySpotter
-Project Description : A web service that utilizes Wasabi cloud, for people to share stray cat pictures.
-  The data will be analysed to provide the insight of the stray cats.
-Member : KIM JOWOON, KELVIN, ALEX
-Date Started : 21.10.2024
-Current version : 2.0
-Version date : 24.10.2024
-*/
+///////////////////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+///////////////////////////////////////////////////////////////////////////////////////
+async function convertHeicToJpg(inputBuffer) {
+  const jpgBuffer = await heicConvert({
+      buffer: inputBuffer,
+      format: 'JPEG', // Output format
+      quality: 1, // Quality from 0 to 1
+  });
 
+  return jpgBuffer; // Return the JPG buffer
+}
+
+//Upload data to Wasabi
+function uploadData(fileData, res, unique_id) {
+    const params = {
+      Bucket: bucket_name, // Your Wasabi bucket name
+      Key: unique_id, // File name in S3
+      Body: fileData,
+    };
+
+    try {
+      const command = new PutObjectCommand(params);
+      const data = s3Client.send(command);
+      res.send(`File uploaded successfully at https://${bucket_name}.s3.wasabisys.com/${params.Key}`);
+    } catch (s3Err) {
+      return res.status(500).send(s3Err.message);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// APP CONFIGURATION
+///////////////////////////////////////////////////////////////////////////////////////
 
 const express = require('express');
 const multer = require('multer');
@@ -39,15 +62,93 @@ const s3Client = new S3Client({
 });
 
 var fileData;
-
 app.use(express.static(path.join(__dirname, client_folder_name)));
+
+///////////////////////////////////////////////////////////////////////////////////////
+// API ENDPOINTS
+///////////////////////////////////////////////////////////////////////////////////////
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, client_folder_name, 'index.html'),); //(__dirname, client_folder_name, 'index.html'),);
 });
 
-app.post('/upload', async (req, res) => {
+app.get('/images', async (req, res) => {
+  const params = {
+    Bucket: bucket_name,
+  };
+  const maxKeys = req.query.maxKeys;
 
+  try {
+    const command = new ListObjectsV2Command(params);
+    const data = await s3Client.send(command);
+    
+    const imageKeys = (data.Contents || []).map(item => item.Key);
+
+    imageKeys.sort((a, b) => {
+      const numA = parseInt(a.replace(/\D/g, ''), 10); // Extract number from key name
+      const numB = parseInt(b.replace(/\D/g, ''), 10);
+      return numB - numA; // Compare in descending order
+    });
+
+    res.json(imageKeys.slice(0,maxKeys));
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+});
+
+// Generate a pre-signed URL for accessing an image
+app.get('/image-url', async (req, res) => {
+  const { key } = req.query;
+  fetchGPSByID(key.slice(1)).then(data => {
+    // Process the returned data here
+    if (!data[0]){
+      data_latitude = "";
+      data_longitude = "";
+    } else {
+      data_latitude = data[0].latitude 
+      data_longitude = data[0].longitude
+    }
+  
+    if (!key) {
+      return res.status(400).send('Key is required');
+    }
+    const params = {
+      Bucket: bucket_name,
+      Key: key,
+      Expires: 60 * 5, // URL expiration time in seconds
+    };
+    try {
+      getSignedUrl(s3Client, new GetObjectCommand(params)).then(url => {
+        res.json({
+          url: url,
+          latitude: data_latitude,
+          longitude: data_longitude
+      })
+    });
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  }).catch(error => {
+    // Handle any errors from select_data
+    console.error('Error fetching data:', error);
+  });
+});
+
+app.get('/report', async (req, res) => {
+  const { method } = req.query;
+    if (!method) {
+      return res.status(400).send('Key is required');
+    }
+    try {
+      createReport(method).then(reportData => {
+        res.json(reportData);
+      });
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+});
+
+app.post('/upload', async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       return res.status(500).send(err.message);
@@ -110,128 +211,11 @@ app.post('/upload', async (req, res) => {
       });
 });
 
-// List images in the bucket
-app.get('/images', async (req, res) => {
-    const params = {
-      Bucket: bucket_name,
-    };
+///////////////////////////////////////////////////////////////////////////////////////
+// SERVER STARTUP
+///////////////////////////////////////////////////////////////////////////////////////
 
-    const maxKeys = req.query.maxKeys;
-    try {
-      const command = new ListObjectsV2Command(params);
-      const data = await s3Client.send(command);
-      
-      const imageKeys = (data.Contents || []).map(item => item.Key);
-
-      imageKeys.sort((a, b) => {
-        const numA = parseInt(a.replace(/\D/g, ''), 10); // Extract number from key name
-        const numB = parseInt(b.replace(/\D/g, ''), 10);
-        return numB - numA; // Compare in descending order
-      });
-
-      res.json(imageKeys.slice(0,maxKeys));
-    } catch (err) {
-      return res.status(500).send(err.message);
-    }
-  });
-
-  // Generate a pre-signed URL for accessing an image
-  app.get('/image-url', async (req, res) => {
-
-    const { key } = req.query;
-
-    fetchGPSByID(key.slice(1)).then(data => {
-      // Process the returned data here
-
-      if (!data[0]){
-        data_latitude = "";
-        data_longitude = "";
-      } else {
-        data_latitude = data[0].latitude 
-        data_longitude = data[0].longitude
-      }
-    
-      if (!key) {
-        return res.status(400).send('Key is required');
-      }
-    
-      const params = {
-        Bucket: bucket_name,
-        Key: key,
-        Expires: 60 * 5, // URL expiration time in seconds
-      };
-    
-      try {
-        getSignedUrl(s3Client, new GetObjectCommand(params)).then(url => {
-          res.json({
-            url: url,
-            latitude: data_latitude,
-            longitude: data_longitude
-        })
-      });
-      } catch (err) {
-        return res.status(500).send(err.message);
-      }
-    }).catch(error => {
-      // Handle any errors from select_data
-      console.error('Error fetching data:', error);
-    });
-  });
-
-  app.get('/report', async (req, res) => {
-
-    const { method } = req.query;
-
-      if (!method) {
-        return res.status(400).send('Key is required');
-      }
-    
-      try {
-        createReport(method).then(reportData => {
-          res.json(reportData);
-        });
-
-      } catch (err) {
-        return res.status(500).send(err.message);
-      }
-    
-  });
-
-
-// Start the server
 const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
-
-//FUNCTIONS///////////////////////////////////////////////////////////////////////////////////////
-async function convertHeicToJpg(inputBuffer) {
-  const jpgBuffer = await heicConvert({
-      buffer: inputBuffer,
-      format: 'JPEG', // Output format
-      quality: 1, // Quality from 0 to 1
-  });
-
-  return jpgBuffer; // Return the JPG buffer
-}
-
-//Upload data to Wasabi
-function uploadData(fileData, res, unique_id) {
-    const params = {
-      Bucket: bucket_name, // Your Wasabi bucket name
-      Key: unique_id, // File name in S3
-      Body: fileData,
-    };
-
-    try {
-      const command = new PutObjectCommand(params);
-      const data = s3Client.send(command);
-      res.send(`File uploaded successfully at https://${bucket_name}.s3.wasabisys.com/${params.Key}`);
-    } catch (s3Err) {
-      return res.status(500).send(s3Err.message);
-    }
-}
-
-function exifConstructor () {
-  const exif = {}
-}
