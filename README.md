@@ -13,14 +13,11 @@
 # Table of Contents
 - [[1] About the Project](#1-about-the-project)
   - [Features](#features)
-  - [Technologies](#technologies)
-- [[2] Getting Started](#2-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-- [[3] Usage](#3-usage)
-- [[4] Contribution](#4-contribution)
-- [[5] Acknowledgement](#5-acknowledgement)
+  - [Project Information](#technologies)
+- [[2] Technologies](#2-getting-started)
+- [[3] Structure](#3-features)
+- [[4] Database ERD](#4-contribution)
+- [[5] Issues & Troubleshooting](#5-acknowledgement)
 - [[6] Contact](#6-contact)
 - [[7] License](#7-license)
 
@@ -75,7 +72,7 @@ const API_KEY = "<Your API key>";
 
 
 
-# [3] Usage
+# [3] Features
 *Show **instructions** and **useful examples** of how your project can be used with **screenshots**, **code examples**, etc. You can make h2 headers for each usage example to clarify your explanation.*
 
 ![usage](res-readme/img/usage.png)
@@ -106,8 +103,8 @@ These are contributors to this project. Thank you!🙆‍♀️
 
 # [6] Contact
 If you want to contact me, you can reach me at:
-- 📧 dev.ujin518@gmail.com
-- 📋 [https://dev-ujin.github.io/contact](https://dev-ujin.github.io/contact)
+- 📧 96nicekim@gmail.com
+- 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
 
 
 
