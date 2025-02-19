@@ -31,38 +31,39 @@ function uploadData(fileData, res, unique_id) {
 ///////////////////////////////////////////////////////////////////////////////////////
 // APP CONFIGURATION
 ///////////////////////////////////////////////////////////////////////////////////////
-
+// Express setup
 const express = require('express');
-const multer = require('multer');
-const { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand, CreatePresignedUrlCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const app = express();
 const path = require('path');
-const exifr = require('exifr');
-const heicConvert = require('heic-convert');
-const { insertDataToDB, fetchRecentPhotoID, createDBConnection, countPicturesToday, fetchGPSByID, GPStoAddress, reverseGeocoding, countPicturesLocation, createReport } = require('./db.js');
-require('dotenv').config();
+const client_folder_name = "public";
+app.use(express.static(path.join(__dirname, client_folder_name)));
 
-const access_key_id = process.env.ACCESS_KEY_ID;
-const secret_access_key_id = process.env.SECRET_ACCESS_KEY_ID;
-const bucket_name = "catphotos"
+require('dotenv').config();
 const HOST = process.env.HOST;
 const DEFAULT_PORT = 3000;
-const app = express();
-const storage = multer.memoryStorage(); // Store file in memory
-const upload = multer({ storage: storage }).single('image'); // Name of the input field
-const client_folder_name = "public";
 
+// Wasabi S3 setup
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single('image');
+const { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand} = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const bucket_name = "catphotos"
+// Initialize S3 client for Wasabi
 const s3Client = new S3Client({
   region: 'ap-southeast-1', // Region, adjust as needed
   endpoint: 'https://s3.ap-southeast-1.wasabisys.com', // Wasabi endpoint
   credentials: {
-    accessKeyId: access_key_id, // Your Wasabi access key
-    secretAccessKey: secret_access_key_id, // Your Wasabi secret key
+    accessKeyId: process.env.ACCESS_KEY_ID, // Your Wasabi access key
+    secretAccessKey: process.env.SECRET_ACCESS_KEY_ID, // Your Wasabi secret key
   },
 });
 
-var fileData;
-app.use(express.static(path.join(__dirname, client_folder_name)));
+// Database and other services
+const db = require('./db.js');
+const exifr = require('exifr');
+const heicConvert = require('heic-convert');
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // API ENDPOINTS
@@ -99,7 +100,7 @@ app.get('/images', async (req, res) => {
 // Generate a pre-signed URL for accessing an image
 app.get('/image-url', async (req, res) => {
   const { key } = req.query;
-  fetchGPSByID(key.slice(1)).then(data => {
+  db.fetchGPSByID(key.slice(1)).then(data => {
     // Process the returned data here
     if (!data[0]){
       data_latitude = "";
@@ -140,7 +141,7 @@ app.get('/report', async (req, res) => {
       return res.status(400).send('Key is required');
     }
     try {
-      createReport(method).then(reportData => {
+      db.createReport(method).then(reportData => {
         res.json(reportData);
       });
     } catch (err) {
@@ -149,6 +150,8 @@ app.get('/report', async (req, res) => {
 });
 
 app.post('/upload', async (req, res) => {
+  var fileData;
+  
   upload(req, res, async (err) => {
     if (err) {
       return res.status(500).send(err.message);
@@ -160,37 +163,34 @@ app.post('/upload', async (req, res) => {
     // Converting heic to jpg with metadata
     let exifData = await exifr.parse(req.file.buffer);
     console.log(exifData);
-    if (exifData === undefined || exifData === null)
-      {
-        var extractedData = {latitude:"0",longitude:"0"}
+    if (exifData === undefined || exifData === null) {
+      var extractedData = {latitude:"0",longitude:"0"}
 
-        result = "Null"
+      result = "Null"
 
-        insertDataToDB(extractedData, result).then(picture_id => {
-          console.log(picture_id); 
-  
-          if (req.file.mimetype == 'image/heic') {
-            fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-                uploadData(fileData, res, 'k' + picture_id)  
-            })
-          } else if (req.file.mimetype.startsWith('image/')) { 
-            fileData = req.file.buffer
-            uploadData(fileData, res, 'k' + picture_id)  
-          } else {
-            console.log("IT IS NOT AN IMAGE")
-          }
-        }).catch(err => {
-          console.error("Error inserting data:", err);
-        });
-      } 
-    
+      db.insertDataToDB(extractedData, result).then(picture_id => {
+        console.log(picture_id); 
+
+        if (req.file.mimetype == 'image/heic') {
+          fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
+              uploadData(fileData, res, 'k' + picture_id)  
+          })
+        } else if (req.file.mimetype.startsWith('image/')) { 
+          fileData = req.file.buffer
+          uploadData(fileData, res, 'k' + picture_id)  
+        } else {
+          console.log("IT IS NOT AN IMAGE")
+        }
+      }).catch(err => {
+        console.error("Error inserting data:", err);
+      });
+    }
     else {
       extractedData = {
         latitude: exifData.latitude, longitude: exifData.longitude
       }
-    
-      GPStoAddress(extractedData.latitude, extractedData.longitude).then(result => {
-        insertDataToDB(extractedData, result).then(picture_id => {
+      db.GPStoAddress(extractedData.latitude, extractedData.longitude).then(result => {
+        db.insertDataToDB(extractedData, result).then(picture_id => {
           console.log(picture_id); 
   
           if (req.file.mimetype == 'image/heic') {
