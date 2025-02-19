@@ -20,14 +20,12 @@ function closeModal() {
     document.getElementById('uploadModal').style.display = 'none';
 }
 
-// Purpose: This asynchronous function fetches images from the server.
-// It sends a GET request to /images with a query parameter maxKeys to limit the number of images fetched.
-// If the response is not OK, it logs an error and exits the function.
-// If successful, it parses the response as JSON to get an array of image keys.
-// The imageContainer is cleared to remove any previously displayed images.
-// For each image key, it sends another request to get the pre-signed URL for the image.
-// If the URL request is successful, it creates an <img> element, sets its source to the fetched URL, and appends it to the imageContainer.
-// If the URL request fails, it logs an error.
+/**
+ * Fetches a list of image keys from the server and displays the images in the image container.
+ * It sends a GET request to fetch image keys, then retrieves pre-signed URLs for each image.
+ * If successful, the images are displayed in the container; otherwise, errors are logged.
+ * @param {number} maxKeys - The maximum number of image keys to fetch from the server. 
+ * */
 async function fetchImages(maxKeys) {
     const response = await fetch(`/images?maxKeys=${maxKeys}`);
 
@@ -89,38 +87,6 @@ function showTotalNumberOfCats(timeframe) {
     })
 }
 
-function sumNumbersInString(s) {
-    // Use a regular expression to find all numbers in the string
-    const numbers = s.match(/\d+/g);
-    // If no numbers are found, return 0
-    if (!numbers) return 0;
-    // Convert strings to integers and sum them up
-    const total = numbers.reduce((sum, num) => sum + parseInt(num, 10), 0);0
-    return total;
-}
-
-function showTotalNumberOfCats(timeframe) {
-  let text = '';
-  let newCount = 0;
-  // console.log(`/report?method=${timeframe}`);
-
-  fetch(`/report?method=${timeframe}`).then(urlResponse => {
-      
-      if (urlResponse.ok) {
-          urlResponse.json().then(reportData => {
-              console.log(reportData);
-              return sumNumbersInString(reportData); // Total number of cats
-          })
-      }
-  })
-}
-
-function openModal() {
-    document.getElementById('uploadModal').style.display = 'block';
-}
-function closeModal() {
-    document.getElementById('uploadModal').style.display = 'none';
-}
 
 ///////////////////////////////////////////////////////////////////////////////////
 // CODE EXECUTION
@@ -134,11 +100,7 @@ fetchImages(MAX_KEYS_TO_BE_SENT);
 // EVENT LISTENERS
 ///////////////////////////////////////////////////////////////////////////////////
 
-// When the form is submitted, it logs the event and prevents the default form submission behavior using event.preventDefault().
-// A FormData object is created, and the first file from the fileInput is added to it.
-// A fetch request is sent to the server at /upload using the POST method, sending the formData.
-// If the upload is successful (response.ok), it calls fetchImages() to refresh the displayed images;
-//  otherwise, it logs an error message.
+// Sends the data to the server, and updates the image list on successful upload
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
   console.log(event);
   event.preventDefault();
@@ -159,7 +121,8 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
   console.error('Upload failed:', response.statusText);
   }
 });
-    
+
+// Open Toggle Menu
 document.getElementById('toggle-button').addEventListener('click', function() {
     const navLinks = document.getElementById('nav-links');
     navLinks.classList.toggle('active');
@@ -172,59 +135,7 @@ window.onclick = function(event) {
     }
 }
 
-// Add this new code for smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const currentHash = window.location.hash;
-    const navLinks = document.querySelectorAll('.nav-links a');
-
-    navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-    if (currentHash === '#founders') {
-        document.getElementById('founders-link').classList.add('active');
-    } else {
-        document.getElementById('home-link').classList.add('active');
-    }
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-            link.parentElement.classList.add('active');
-        });
-    });
-});
-
-document.getElementById('toggle-button').addEventListener('click', function() {
-  const navLinks = document.getElementById('nav-links');
-  navLinks.classList.toggle('active');
-});
-
-// Close the modal when clicking outside of it
-window.onclick = function(event) {
-    if (event.target == document.getElementById('uploadModal')) {
-        closeModal();
-    }
-}
-
-// Add this new code for smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
+// Highlight the selected menu as active
 document.addEventListener('DOMContentLoaded', () => {
     const currentHash = window.location.hash;
     const navLinks = document.querySelectorAll('.nav-links a');
