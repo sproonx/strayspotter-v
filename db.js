@@ -35,6 +35,7 @@ function createDBConnection() {
     database: 'strayspotter_database',
     password: process.env.DB_PASSWORD,
   });
+  console.log("Database Connected")
   return connection;
 }
 
