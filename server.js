@@ -62,7 +62,7 @@ async function convertHeicToJpg(inputBuffer) {
  * @param {string} unique_id A unique identifier for the file being uploaded.
  * @throws {Error} Throws an error if there is an issue during the upload process.
  */
-function uploadData(fileData, res, unique_id) {
+function uploadPicture(fileData, res, unique_id) {
     const params = {
       Bucket: bucket_name, // Your Wasabi bucket name
       Key: unique_id, // File name in S3
@@ -209,11 +209,11 @@ app.post('/upload', async (req, res) => {
         console.log(picture_id); 
         if (req.file.mimetype == 'image/heic') {
           fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-              uploadData(fileData, res, 'k' + picture_id)  
+              uploadPicture(fileData, res, 'k' + picture_id)  
           })
         } else if (req.file.mimetype.startsWith('image/')) { 
           fileData = req.file.buffer
-          uploadData(fileData, res, 'k' + picture_id)  
+          uploadPicture(fileData, res, 'k' + picture_id)  
         } else {
           console.log("IT IS NOT AN IMAGE")
         }
@@ -233,11 +233,11 @@ app.post('/upload', async (req, res) => {
   
           if (req.file.mimetype == 'image/heic') {
             fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-                uploadData(fileData, res, 'k' + picture_id)  
+                uploadPicture(fileData, res, 'k' + picture_id)  
             })
           } else if (req.file.mimetype.startsWith('image/')) { 
             fileData = req.file.buffer
-            uploadData(fileData, res, 'k' + picture_id)  
+            uploadPicture(fileData, res, 'k' + picture_id)  
           } else {
             console.log("IT IS NOT AN IMAGE")
           }
