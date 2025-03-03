@@ -10,19 +10,15 @@
     <!-- <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet"> -->
     <meta name="description" content="StraySpotter: A platform for cat lovers to share and report stray cats in their neighborhoods.">
     <meta name="keywords" content="cats, strays, community, photography">
-    
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <nav aria-label = "Main Navigation">
-
         <a href="index.html" class="logo">
             <img src="resources/logo.jpeg" alt="StraySpotter logo" class="logo-img">
             <span>StraySpotter</span>
         </a>
-
-
         <button class="toggle-button" id="toggle-button" aria-label="Toggle navigation menu">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -39,21 +35,20 @@
             <a href="#" onclick="openModal()">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-            
         </div>
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
-    
 
-    
+    <!--Landing Section-->
     <header id="home">
-      
         <div class="purpose-container">
             <div class="purpose-text">
                 <h1>Share your love for neighborhood cats!</h1>
                 <p>
-                    Stray Spotter is a platform for cat lovers to share photos of neighborhood cats with fellow enthusiasts! By gathering data from these shared images, the platform provides insights into the status of stray cats, helping to support them and promote harmony between cats and their communities.
+                    Stray Spotter is a place for cat lovers to share photos of local stray cats. <br>
+                    We use the data to learn more about their wellbeing and help raise awareness. <br>
+                    Keeping the community and cats in harmony!
                 </p>
                 <div id="upload" class="upload-section">
                     <button class="upload-button" onclick="openModal()">Share Pictures</button>
@@ -65,10 +60,8 @@
                 <img src="resources/cathead2.png" alt="Interactive Cat">
                 <div class="speech-bubble">Meow! Feed me!</div>
             </div>
-        
     </header>
     
-
     <!--Pop Up-->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
@@ -79,16 +72,11 @@
                 <hr>
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
-
-
-
                 <div class="radio-buttons">
                     <label for="happy" >
                        <input type="radio" name="category" id="happy" value="option1">
                         <img src="resources/happy.png" alt="Happy" class="radio-image">
                     </label>
-
-            
                     <label for="normal">
                         <input type="radio" name="category" id="normal" value="option2">
                         <img src="resources/worry.png" alt="Normal" class="radio-image">
@@ -103,15 +91,14 @@
         </div>
     </div>
 
-<!-- Gallery -->
-
+    <!-- Gallery -->
     <section class="gallery" id="gallery" >
         <h2>Gallery</h2>
         <div class="gallery-grid" id="imageContainer"></div>
         <a href="gallery.html"><button class="see-more">See More</button></a>
     </section>
 
-
+    <!-- About us -->
     <section class="founders" id="founders">
         <h2>Our Team</h2>
         <div class="founders-grid">
@@ -126,8 +113,6 @@
                     <li>Optimized visuals and user interactions </li>
                 </ul>
             </div>
-
-            
             <div class="founder">
                 <img src="resources/jowoon.jpg" alt="John">
                 
@@ -155,49 +140,44 @@
         </div>
     </section>
 
-
-<section class="report-section">
-    <div class="report-container">
-        <div class="report-header">
-            <h2>Stray Cat Reports</h2>
-            <p>Stay informed about the stray cat population in your area</p>
-        </div>
-        <div class="report-content">
-            <div class="report-stats">
-                <h3>Current Statistics</h3>
-                <div class="stat-item">
-                    <p class="stat-label">Strays Spotted Today:</p>
-                    <p class="stat-value" id="today">3</p>
+    <!-- Report -->
+    <section class="report-section">
+        <div class="report-container">
+            <div class="report-header">
+                <h2>Stray Cat Reports</h2>
+                <p>Stay informed about the stray cat population in your area</p>
+            </div>
+            <div class="report-content">
+                <div class="report-stats">
+                    <h3>Current Statistics</h3>
+                    <div class="stat-item">
+                        <p class="stat-label">Strays Spotted Today:</p>
+                        <p class="stat-value" id="today">3</p>
+                    </div>
+                    <div class="stat-item">
+                        <p class="stat-label">Weekly Total:</p>
+                        <p class="stat-value" id="week">12</p>
+                    </div>
+                    <div class="stat-item">
+                        <p class="stat-label">Monthly Total:</p>
+                        <p class="stat-value" id="month">12</p>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <p class="stat-label">Weekly Total:</p>
-                    <p class="stat-value" id="week">12</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Monthly Total:</p>
-                    <p class="stat-value" id="month">12</p>
+                <div class="report-buttons">
+        
+                    <a href="report.html" class="report-btn">View Full Detailed Report</a>
                 </div>
             </div>
-            <div class="report-buttons">
-       
-                <a href="report.html" class="report-btn">View Full Detailed Report</a>
-            </div>
         </div>
-    </div>
-</section>
-
-
-
+    </section>
 
     <footer>
         <p> &copy; Copyright 2024. All Rights Reserved</p>
         <p>Follow us on Socials | GitHub</p>
-
     </footer>
 
 <!-- SCRIPTS ------------------------------------------------------------------------------->
 <script src="script.js"></script>
-    
 </body>
 </html>
 
