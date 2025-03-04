@@ -35,7 +35,6 @@ function createDBConnection() {
     database: 'strayspotter_database',
     password: process.env.DB_PASSWORD,
   });
-  console.log("Database Connected")
   return connection;
 }
 
@@ -123,24 +122,24 @@ async function reverseGeocoding(latitude, longitude) {
  * If result is provided, updates with the appropriate postal information and sets cat status to 1.
  * 
  * @param {Object} metadata - Metadata of the picture, containing latitude, longitude, and date.
- * @param {Object|null} result - Geolocation result (can be null).
+ * @param {Object|null} address - Address result (can be null).
  * @returns {Promise} Resolves with the inserted record ID or rejects with an error.
  */
-function insertDataToDB(metadata, result) {
+function insertDataToDB(metadata, address) {
     const connection = createDBConnection()
     let data = {
       latitude : metadata.latitude,
       longitude : metadata.longitude,
-      date : metadata.CreateDate ?? "9999-12-30"
+      date : metadata.date_taken ?? "9999-12-30"
     }
-    if (!result) {
+    if (!address) {
       data.postcode = "0";
       data.district_no = "0";
       data.district_name = "none";
     } else {
-      data.postcode = result.postcode;
-      data.district_no = result.districtNo;
-      data.district_name = result.districtName;
+      data.postcode = address.postcode;
+      data.district_no = address.districtNo;
+      data.district_name = address.districtName;
       data.cat_status = 1;
     }
     return new Promise((resolve, reject) => {
@@ -212,13 +211,13 @@ async function createReport(request_type) {
  * @param {number} longitude - The longitude of the location.
  * @returns {Object|null} An object in the format {postcode, districtNo, districtName} or null if an error occurs.
  */
-async function GPStoAddress(latitude, longitude) {
+async function GPSToAddress(latitude, longitude) {
   try {
       const postcode = await reverseGeocoding(latitude, longitude);
-        const districtData = postalData[postcode.substring(0,2)];
-        return {
-          postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
-        };
+      const districtData = postalData[postcode.substring(0,2)];
+      return {
+        postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
+      };
   } catch (error) {
       console.log("Error GPStoAddress: ", error);
       return null;
@@ -282,7 +281,7 @@ module.exports = {
   insertDataToDB,
   createDBConnection,
   fetchGPSByID,
-  GPStoAddress,
+  GPSToAddress,
   reverseGeocoding,
   createReport
 };

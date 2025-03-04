@@ -227,7 +227,7 @@ app.post('/upload', async (req, res) => {
       extractedData = {
         latitude: exifData.latitude, longitude: exifData.longitude
       }
-      db.GPStoAddress(extractedData.latitude, extractedData.longitude).then(result => {
+      db.GPSToAddress(extractedData.latitude, extractedData.longitude).then(result => {
         db.insertDataToDB(extractedData, result).then(picture_id => {
           console.log(picture_id); 
   
