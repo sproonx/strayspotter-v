@@ -33,10 +33,7 @@ const s3Client = new S3Client({
 const db = require('./db.js');
 const exifr = require('exifr');
 const heicConvert = require('heic-convert');
-
-///////////////////////////////////////////////////////////////////////////////////////
-// FUNCTIONS
-///////////////////////////////////////////////////////////////////////////////////////
+const { default: axios } = require('axios');
 
 /**
  * Converts a HEIC image buffer to a JPEG image buffer.
@@ -247,6 +244,23 @@ app.post('/upload', async (req, res) => {
       });
     }
   });
+});
+
+// TEST
+app.get('/admin/:id', async (req, res) => {
+  const requestURL = "http://127.0.0.1:8000/classification/" + req.params.id
+  try {
+    const response = await axios.get(requestURL);
+    if (response.data) {
+      res.send("Over 100");
+    }
+    else {
+      res.send("Under 100");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error: "error"});
+  }
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////
