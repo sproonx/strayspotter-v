@@ -80,7 +80,16 @@ function countPicturesLocation(districtNo, type) {
       });
   });
 }
-
+/**
+ * API Error Codes 
+ * 400 - Please send the access token in the request header as a bearer token.
+ * 400 - Your provided location is empty.
+ * 400 - Your provided location is invalid.
+ * 401 - Token has expired: Session expired. Please refresh your token (if still within refresh window) or re-login.
+ * 401 - Invalid token: Could not decode token: The token xxx; is an invalid JWS.
+ * 403 - Access Forbidden. GET access to component 'xxx' of service 'xxx' is not allowed by this user's role.
+ * 429 - API limit(s) exceeded.
+*/
 /**
  * Performs reverse geocoding using OneMap API to retrieve the postal code for a given latitude and longitude.
  *
@@ -88,6 +97,7 @@ function countPicturesLocation(districtNo, type) {
  * @param {number} longitude - The longitude coordinate.
  * @returns {Promise<string|null>} The postal code if found, otherwise null.
  * @throws Will log an error if the request fails or if latitude/longitude is null.
+ * 
  */
 async function reverseGeocoding(latitude, longitude) {
   const requestURL = `https://www.onemap.gov.sg/api/public/revgeocode?location=${latitude},${longitude}&buffer=100&addressType=All&otherFeatures=N`;
@@ -102,7 +112,8 @@ async function reverseGeocoding(latitude, longitude) {
         'Authorization': process.env.KEY_ONEMAP_API
       }
     });
-      return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
+    console.log(response);
+    return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
   } catch (error) {
     console.error('Error reverseGeocoding:\n', error);
     return null;
@@ -182,6 +193,8 @@ function fetchGPSByID(id) {
     );
   });
 }
+
+
 
 /**
  * Creates a report based on the total number of pictures and the count per district for a given request type.
@@ -279,9 +292,7 @@ function countPicturesToday() {
 
 module.exports = {
   insertDataToDB,
-  createDBConnection,
   fetchGPSByID,
   GPSToAddress,
-  reverseGeocoding,
   createReport
 };
