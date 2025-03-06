@@ -7,7 +7,7 @@
 ![Image](https://github.com/user-attachments/assets/739db5df-15ee-4d88-97e7-3a39719f776c)
 
 <!--Project Buttons-->
- [![Readme in Korean][readme-ko-shield]][readme-ko-url] [![View Demo][view-demo-shield]][view-demo-url] [![Report bug][report-bug-shield]][report-bug-url] [![Request feature][request-feature-shield]][request-feature-url]
+[![View Demo][view-demo-shield]][view-demo-url] [![Report bug][report-bug-shield]][report-bug-url] [![Request feature][request-feature-shield]][request-feature-url]
 
 <!--Table of Contents-->
 # Table of Contents
@@ -119,13 +119,12 @@ This project is licensed under the MIT License. See the [`LICENSE`][license-url]
 [issue-closed-shield]: https://img.shields.io/github/issues-closed/dev-ujin/readme-template?labelColor=D8D8D8&color=FE9A2E
 
 <!--Url for Buttons-->
-[readme-ko-shield]: https://img.shields.io/badge/-readme%20in%20korean-2E2E2E?style=for-the-badge
 [view-demo-shield]: https://img.shields.io/badge/-%F0%9F%98%8E%20view%20demo-F3F781?style=for-the-badge
 [view-demo-url]: https://dev-ujin.github.io
 [report-bug-shield]: https://img.shields.io/badge/-%F0%9F%90%9E%20report%20bug-F5A9A9?style=for-the-badge
-[report-bug-url]: https://github.com/dev-ujin/readme-template/issues
+[report-bug-url]: https://github.com/NiceKim/strayspotter/issues
 [request-feature-shield]: https://img.shields.io/badge/-%E2%9C%A8%20request%20feature-A9D0F5?style=for-the-badge
-[request-feature-url]: https://github.com/dev-ujin/readme-template/issues
+[request-feature-url]: https://github.com/NiceKim/strayspotter/issues
 
 <!--URLS-->
 [license-url]: res-readme/LICENSE.md
