@@ -14,12 +14,14 @@
 - [[1] About the Project](#1-about-the-project)
   - [Features](#features)
   - [Project Information](#technologies)
-- [[2] Technologies](#2-getting-started)
-- [[3] Structure](#3-features)
-- [[4] Database ERD](#4-contribution)
-- [[5] Issues & Troubleshooting](#5-acknowledgement)
-- [[6] Contact](#6-contact)
-- [[7] License](#7-license)
+  - Project Members
+- [[2] Technologies](#2-technologies)
+- [[3] Structure Overview](#3-features)
+  - [System Architecture](#technologies)
+  - [API Specification](#technologies)
+  - [Database Diagram](#technologies)
+- [[4] Contact](#6-contact)
+- [[5] License](#7-license)
 
 
 
@@ -28,6 +30,9 @@
 - ❗️Short❗️ introduction/motivation
 - What your project does
 - Why people should consider using your project
+- Project duration
+- Phase 1:
+- Phase 2:
 
 ## Features
 *Provide **main features** or **unique features** which you want to emphasize.*
@@ -35,44 +40,29 @@
 - Provide **language option** in badge
 
 ## Technologies
-*List **languages**, **frameworks**, and **major libraries** with their **version**.*
-- [Maven](https://maven.apache.org/) 3.6.3
-- [MySQL](https://www.mysql.com/) 8.0
-- [Spring](https://spring.io/) 2.4.3
 
 
 
-# [2] Getting Started
-*If your program runs differently depending on the OS, explain how to run it for each OS.*
-## Prerequisites
-*List software and libraries that you need to run your project and Explain how to get them.*
-- [OpenWeather API key](https://openweathermap.org/) for free
-- npm
-```bash
-npm install npm@latest -g
-```
 
-## Installation
-*Explain how to get your source.*
-1. Clone the repository
-```bash
-git clone https://github.com/your-username/project-repository
-```
-2. Install NPM packages
-```bash
-npm install
-```
 
-## Configuration
-*Explain where to fill your code.*
-- Enter Openweather API key in `config.js`
-```bash
-const API_KEY = "<Your API key>";
-```
+# [2] Technologies
+
+### Programming Language
+JavaScript, Python
+### Frontend
+- Frontend : HTML, CSS, Javascript
+### Backend
+- Backend and server: Node.JS, Express, Fast API, MySQL
+### Deplyment & Cloud Services
+- AWS Beanstalk, Lambda, RDS
+### API & Documentation
+- API : Restful API, Swagger UI
+### Tools
+- Tools: Git, GitHub, Jest
 
 
 
-# [3] Features
+# [3] Structure Overview
 *Show **instructions** and **useful examples** of how your project can be used with **screenshots**, **code examples**, etc. You can make h2 headers for each usage example to clarify your explanation.*
 
 ![usage](res-readme/img/usage.png)
@@ -82,33 +72,14 @@ const API_KEY = "<Your API key>";
 ```
 
 
-
-# [4] Contribution
-Any contributions you make are greatly appreciated. Here is the [`contributing guide`][contribution-url].
-These are contributors to this project. Thank you!🙆‍♀️
-*If you like to use emoji, you can use 🐞 for **fixing bug**, 💡 for **suggestion**, ✨ for creating **new feature***
-- 🐞 [dev-ujin](https://github.com/dev-ujin): Fix bug on the main page
-
-
-
-# [5] Acknowledgement
-*Provide links to **any sources** like **relevant repositories** or **blog posts** that inspired you to build your project.*
-- [Readme Template - Embedded Artistry](https://embeddedartistry.com/blog/2017/11/30/embedded-artistry-readme-template/)
-- [How to write a kickass Readme - James.Scott](https://dev.to/scottydocs/how-to-write-a-kickass-readme-5af9)
-- [Best-README-Template - othneildrew](https://github.com/othneildrew/Best-README-Template#prerequisites)
-- [Img Shields](https://shields.io/)
-- [Github Pages](https://pages.github.com/)
-
-
-
-# [6] Contact
+# [4] Contact
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
 - 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
 
 
 
-# [7] License
+# [5] License
 This project is licensed under the MIT License. See the [`LICENSE`][license-url] for more information.
 
 
