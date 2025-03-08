@@ -38,27 +38,28 @@
 - Provide **guidelines** in *italic* font to help you write aaaaawesome **README** easily.
 - Provide **language option** in badge
 
-## Technologies
-
-
-
-
 
 # [2] Technologies
 
 ### Programming Language
-JavaScript, Python
+![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
+![pt](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ### Frontend
-- Frontend : HTML, CSS, Javascript
+![HTML](https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
 ### Backend
-- Backend and server: Node.JS, Express, Fast API, MySQL
+![Node](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ### Deplyment & Cloud Services
-- AWS Beanstalk, Lambda, RDS
+<img src="https://img.shields.io/badge/AWS ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/AWS rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/AWS lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white"> <img src="https://img.shields.io/badge/AWS s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
 ### API & Documentation
-- API : Restful API, Swagger UI
+<img src="https://img.shields.io/badge/REST API-527FFF?style=for-the-badge&logo=&logoColor=white"> ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ### Tools
-- Tools: Git, GitHub, Jest
-
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 
 
 # [3] Structure Overview
