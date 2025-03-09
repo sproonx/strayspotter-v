@@ -12,32 +12,103 @@
 <!--Table of Contents-->
 # Table of Contents
 - [[1] About the Project](#1-about-the-project)
-  - [Features](#features)
   - [Project Information](#technologies)
-  - Project Members
-- [[2] Technologies](#2-technologies)
-- [[3] Structure Overview](#3-features)
+  - [Project Duration & Members](#project-duration-&-members)
+- [[2] Features](#2-features)
+- [[3] Technologies](#3-technologies)
+- [[4] Structure Overview](#4-features)
   - [System Architecture](#technologies)
   - [API Specification](#technologies)
   - [Database Diagram](#technologies)
-- [[4] Contact](#6-contact)
-
+- [[5] Contact](#5-contact)
 
 
 # [1] About the Project
-*A web platform leveraging Wasabi cloud services, enabling cat lovers to share pictures of stray cats. The data collected will be analyzed to provide insights into the environment and status of stray cats.*
-- ❗️Short❗️ introduction/motivation
-- What your project does
-- Why people should consider using your project
-- Project duration
-- Phase 1:
-- Phase 2:
+*Everyone loves cats! Stray Spotter is a web platform for cat lovers to share photos of neighborhood cats. <br> By collecting and analyzing photo metadata, we help track their population and well-being.*
 
-## Features
-*Provide **main features** or **unique features** which you want to emphasize.*
-- Provide **guidelines** in *italic* font to help you write aaaaawesome **README** easily.
-- Provide **language option** in badge
+### Project Information
+- Stray cats face challenges such as hunger, injury, and overpopulation.
+- Monitoring and tracking individual cats is difficult without a structured system.
+- Our platform creates a fun and welcoming space for cat lovers to share pictures and stories of neighborhood cats.
+- Leveraging collective intelligence to generate insights for better stray cat welfare.
+### Project Duration & Members
+- Phase 1 : 2024.10.18 - 2024.10.25
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><img src="https://github.com/NiceKim.png" width="150px;" alt="NiceKim"/></td>
+      <td align="center"><img src="https://github.com/Bloxvin.png" width="150px;" alt="Bloxvin"/></td>
+      <td align="center"><img src="https://github.com/TwilightAlpha.png" width="150px;" alt="TwilightAlpha"/></td>
+    </tr>
+      <tr>
+      <td align="center">Jowoon Kim <br> <a href="https://github.com/NiceKim">@NiceKim</a></td>
+      <td align="center">Kaung Myat Kyaw <br> <a href="https://github.com/Bloxvin">@Bloxvin</a></td>
+      <td align="center">Min Thiha Khine <br> <a href="https://github.com/TwilightAlpha">@TwilightAlpha </a></td>
+     </tr>
+      <tr>
+      <td align="center">Project Manager/<br> Backend Developer</td>
+      <td align="center">Backend Developer</td>
+      <td align="center">Frontend Developer</td>
+     </tr>
+  </tbody>
+</table>
 
+- Phase 2 : 2025.03.03 - 2025.04.30 (Planned)
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><img src="https://github.com/NiceKim.png" width="150px;" alt="NiceKim"/></td>
+      <td align="center"><img src="https://github.com/your-github-username.png" width="150px;" alt="Bloxvin"/></td>
+      <td align="center">><img src="https://github.com/your-github-username.png" width="150px;" alt="TwilightAlpha"/></td>
+    </tr>
+      <tr>
+      <td align="center">Jowoon Kim <br> <a href="https://github.com/NiceKim">@NiceKim</a></td>
+      <td align="center">Dajin Kim <br> <a href="https://github.com/your-github-username">@TBU</a></td>
+      <td align="center">TBU <br> <a href="https://github.com/your-github-username">@TBU </a></td>
+     </tr>
+      <tr>
+      <td align="center">Project Manager/<br> Backend Developer</td>
+      <td align="center">ML Engineer</td>
+      <td align="center">Frontend Developer</td>
+     </tr>
+  </tbody>
+</table>
+
+
+# [2] Features
+- Sharing Pictures: Easily upload and share pictures of neighborhood cats.
+- Gallery Feature: Browse a collection of cat photos from the community.
+- Map: View the locations of shared cat sightings on an interactive map.
+- Report: Reports generated based on the metadata of uploaded pictures.
+
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/2089dffb-d398-46e7-b198-57878d466bbd" width="500px" height="350px" alt="HomePage"></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/2badffef-c371-4d46-baaf-45fef05facee" width="500px" height="350px" alt="Upload"></td>
+    </tr>
+      <tr>
+      <td align="center">HomePage</td>
+      <td align="center">Upload</td>
+     </tr>
+        <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/db56fed0-e3c9-4de7-97a1-2d4bfa0d9fe1" width="500px" height="350px" alt="Gallery"></td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/4c2bfec9-2e29-4e15-830f-e8a0b4dd1f0f" width="500px" height="200px" alt="Map"></td>
+    </tr>
+      <tr>
+      <td align="center">Gallery</td>
+        <td align="center">Map</td>
+     </tr>
+  </tbody>
+</table>
+
+
+### Features To be added
+- User Login: Securely log in to your account to share and track your posts.
+- Like & Comments on Pictures: Interact with pictures by liking and leaving comments.
+- Location-Based Gallery: Explore cat pictures based on specific geographic locations.
+- AI for Picture Detection: Automatically detect and remove non-cat pictures using AI.
 
 # [2] Technologies
 
@@ -56,11 +127,11 @@
 <img src="https://img.shields.io/badge/AWS ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/AWS rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/AWS lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white"> <img src="https://img.shields.io/badge/AWS s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
 ### API & Documentation
 <img src="https://img.shields.io/badge/REST API-527FFF?style=for-the-badge&logo=&logoColor=white"> ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
-### Tools
+### Tools & AI
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
-
+![Tensor](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 
 # [3] Structure Overview
 *Show **instructions** and **useful examples** of how your project can be used with **screenshots**, **code examples**, etc. You can make h2 headers for each usage example to clarify your explanation.*
@@ -76,3 +147,17 @@
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
 - 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
+
+
+
+<!--Url for Badges-->
+[repository-size-shield]: https://img.shields.io/github/repo-size/NiceKim/strayspotter?labelColor=D8D8D8&color=BE81F7
+[issue-closed-shield]: https://img.shields.io/github/issues-closed/NiceKim/strayspotter?labelColor=D8D8D8&color=FE9A2E
+
+<!--Url for Buttons-->
+[view-demo-shield]: https://img.shields.io/badge/-%F0%9F%98%8E%20view%20demo-F3F781?style=for-the-badge
+[view-demo-url]: https://github.com/NiceKim/strayspotter
+[report-bug-shield]: https://img.shields.io/badge/-%F0%9F%90%9E%20report%20bug-F5A9A9?style=for-the-badge
+[report-bug-url]: https://github.com/NiceKim/strayspotter/issues
+[request-feature-shield]: https://img.shields.io/badge/-%E2%9C%A8%20request%20feature-A9D0F5?style=for-the-badge
+[request-feature-url]: https://github.com/NiceKim/strayspotter/issues
