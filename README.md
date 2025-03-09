@@ -17,9 +17,9 @@
 - [[2] Features](#2-features)
 - [[3] Technologies](#3-technologies)
 - [[4] Structure Overview](#4-features)
-  - [System Architecture](#technologies)
-  - [API Specification](#technologies)
-  - [Database Diagram](#technologies)
+  - [System Architecture](#system-architecture)
+  - [API Specification](#api-specification)
+  - [Database Diagram](#database-diagram)
 - [[5] Contact](#5-contact)
 
 
@@ -111,7 +111,7 @@
 - Location-Based Gallery: Explore cat pictures based on specific geographic locations.
 - AI for Picture Detection: Automatically detect and remove non-cat pictures using AI.
 
-# [2] Technologies
+# [3] Technologies
 
 ### Programming Language
 ![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
@@ -134,17 +134,17 @@
 ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 ![Tensor](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 
-# [3] Structure Overview
-*Show **instructions** and **useful examples** of how your project can be used with **screenshots**, **code examples**, etc. You can make h2 headers for each usage example to clarify your explanation.*
+# [4] Structure Overview
 
-![usage](res-readme/img/usage.png)
+## System Architecture
 
-```java
-// Show useful code examples of some of your APIs 
-```
+## API Specification
+
+## Database Diagram
 
 
-# [4] Contact
+
+# [5] Contact
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
 - 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
