@@ -16,7 +16,7 @@
   - [Project Duration & Members](#project-duration--members)
 - [[2] Features](#2-features)
 - [[3] Technologies](#3-technologies)
-- [[4] Structure Overview](#4-features)
+- [[4] Structure Overview](#4-structure-overview)
   - [System Architecture](#system-architecture)
   - [API Specification](#api-specification)
   - [Database Diagram](#database-diagram)
@@ -82,7 +82,8 @@
 - Map: View the locations of shared cat sightings on an interactive map.
 - Report: Reports generated based on the metadata of uploaded pictures.
 
-
+<details>
+  <summary>Click to view screenshots</summary>
 <table>
   <tbody>
     <tr>
@@ -103,7 +104,7 @@
      </tr>
   </tbody>
 </table>
-
+</details>
 
 ### Features To be added
 - User Login: Securely log in to your account to share and track your posts.
@@ -137,12 +138,13 @@
 # [4] Structure Overview
 
 ## System Architecture
+![System Architecture StratySpotter drawio](https://github.com/user-attachments/assets/abb3e0cc-9dbe-4aa3-9df9-2be08342e4e0)
 
 ## API Specification
+![image](https://github.com/user-attachments/assets/0feed60d-8af9-4b7c-93d3-2ef948388150)
 
 ## Database Diagram
-
-
+![ERD](https://github.com/user-attachments/assets/6bd28c18-6afa-4bbd-b323-b4f4202c9c6e)
 
 # [5] Contact
 If you want to contact me, you can reach me at:
