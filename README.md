@@ -60,11 +60,11 @@
     <tr>
       <td align="center"><img src="https://github.com/NiceKim.png" width="150px;" alt="NiceKim"/></td>
       <td align="center"><img src="https://github.com/your-github-username.png" width="150px;" alt="Bloxvin"/></td>
-      <td align="center">><img src="https://github.com/your-github-username.png" width="150px;" alt="TwilightAlpha"/></td>
+      <td align="center"><img src="https://github.com/your-github-username.png" width="150px;" alt="TwilightAlpha"/></td>
     </tr>
       <tr>
       <td align="center">Jowoon Kim <br> <a href="https://github.com/NiceKim">@NiceKim</a></td>
-      <td align="center">Dajin Kim <br> <a href="https://github.com/your-github-username">@TBU</a></td>
+      <td align="center">Dajin Kim <br> <a href="https://github.com/Dajin-01">@Dajin-01</a></td>
       <td align="center">TBU <br> <a href="https://github.com/your-github-username">@TBU </a></td>
      </tr>
       <tr>
