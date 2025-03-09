@@ -12,8 +12,8 @@
 <!--Table of Contents-->
 # Table of Contents
 - [[1] About the Project](#1-about-the-project)
-  - [Project Information](#technologies)
-  - [Project Duration & Members](#project-duration-&-members)
+  - [Project Information](#project-information)
+  - [Project Duration & Members](#project-duration--members)
 - [[2] Features](#2-features)
 - [[3] Technologies](#3-technologies)
 - [[4] Structure Overview](#4-features)
@@ -26,12 +26,13 @@
 # [1] About the Project
 *Everyone loves cats! Stray Spotter is a web platform for cat lovers to share photos of neighborhood cats. <br> By collecting and analyzing photo metadata, we help track their population and well-being.*
 
-### Project Information
+## Project Information
 - Stray cats face challenges such as hunger, injury, and overpopulation.
 - Monitoring and tracking individual cats is difficult without a structured system.
 - Our platform creates a fun and welcoming space for cat lovers to share pictures and stories of neighborhood cats.
 - Leveraging collective intelligence to generate insights for better stray cat welfare.
-### Project Duration & Members
+
+## Project Duration & Members
 - Phase 1 : 2024.10.18 - 2024.10.25
 <table>
   <tbody>
