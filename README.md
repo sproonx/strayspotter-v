@@ -1,7 +1,7 @@
 # Stray Spotter
 
 <!--Badges-->
-![MIT License][license-shield] ![Repository Size][repository-size-shield] ![Issue Closed][issue-closed-shield]
+![Repository Size][repository-size-shield] ![Issue Closed][issue-closed-shield]
 
 <!--Project Title Image-->
 ![Image](https://github.com/user-attachments/assets/739db5df-15ee-4d88-97e7-3a39719f776c)
