@@ -68,21 +68,21 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Upload Your Cat Photo</h2> 
             <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="closeModal()">
-                <input type="file" id="imageInput" name="image" required />
+                <input type="file" id="imageInput" name="image" required  accept="image/*, .heic, .heif" />
                 <hr>
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
                 <div class="radio-buttons">
                     <label for="happy" >
-                       <input type="radio" name="category" id="happy" value="option1">
+                       <input type="radio" name="status" id="happy" value="good" checked>
                         <img src="resources/happy.png" alt="Happy" class="radio-image">
                     </label>
                     <label for="normal">
-                        <input type="radio" name="category" id="normal" value="option2">
+                        <input type="radio" name="status" id="normal" value="medium">
                         <img src="resources/worry.png" alt="Normal" class="radio-image">
                     </label>
                     <label for="sad">
-                        <input type="radio" name="category" id="sad" value="option3">
+                        <input type="radio" name="status" id="sad" value="bad">
                         <img src="resources/cry.png" alt="Sad" class="radio-image">
                     </label>
                 </div>
@@ -176,8 +176,7 @@
         <p>Follow us on Socials | GitHub</p>
     </footer>
 
-<!-- SCRIPTS ------------------------------------------------------------------------------->
-<script src="script.js"></script>
+<script src="home.js"></script>
 </body>
 </html>
 

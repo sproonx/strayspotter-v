@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 // External Modules and Dependencies
 ///////////////////////////////////////////////////////////////////////////////////////
-
 const mysql = require('mysql2');
 const axios = require('axios');
 const { postalData, NumbertoName } = require('./postal_data.js');
@@ -15,28 +14,6 @@ require('dotenv').config();
 ///////////////////////////////////////////////////////////////////////////////////////
 // Ineternal Function
 ///////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Create Connection only one time during the server startup
- */
-
-/**
- * Creates a connection to the MySQL database.
- * 
- * This function establishes a connection to the MySQL database with the given configuration details,
- * such as host, user, database name, and password, which are used to connect to the 'strayspotter_database'.
- * 
- * @returns {object} The MySQL connection object used for interacting with the database.
- */
-function createDBConnection() {
-  const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'strayspotter_database',
-    password: process.env.DB_PASSWORD,
-  });
-  return connection;
-}
 
 /**
  * Counts the number of pictures taken in a specific district within a given time period.
@@ -125,6 +102,28 @@ async function reverseGeocoding(latitude, longitude) {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * TODO: Create Connection only one time during the server startup
+ */
+
+/**
+ * Creates a connection to the MySQL database.
+ * 
+ * This function establishes a connection to the MySQL database with the given configuration details,
+ * such as host, user, database name, and password, which are used to connect to the 'strayspotter_database'.
+ * 
+ * @returns {object} The MySQL connection object used for interacting with the database.
+ */
+function createDBConnection() {
+  const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'strayspotter_database',
+    password: process.env.DB_PASSWORD,
+  });
+  return connection;
+}
+
+/**
  * TODO: THE ADDRESS AND CAT STAUTS TO BE UPDATED
  */
 /**
@@ -133,25 +132,26 @@ async function reverseGeocoding(latitude, longitude) {
  * If result is provided, updates with the appropriate postal information and sets cat status to 1.
  * 
  * @param {Object} metadata - Metadata of the picture, containing latitude, longitude, and date.
- * @param {Object|null} address - Address result (can be null).
+ * @param {Object|null} otherData - Address result, status (can be null).
  * @returns {Promise} Resolves with the inserted record ID or rejects with an error.
  */
-function insertDataToDB(metadata, address) {
+function insertDataToDB(metadata, otherData) {
     const connection = createDBConnection()
     let data = {
       latitude : metadata.latitude,
       longitude : metadata.longitude,
       date : metadata.date_taken ?? "9999-12-30"
     }
-    if (!address) {
+    if (!otherData) {
       data.postcode = "0";
       data.district_no = "0";
       data.district_name = "none";
+      data.cat_status = "good";
     } else {
-      data.postcode = address.postcode;
-      data.district_no = address.districtNo;
-      data.district_name = address.districtName;
-      data.cat_status = 1;
+      data.postcode = otherData[1].postcode;
+      data.district_no = otherData[1].districtNo;
+      data.district_name = otherData[1].districtName;
+      data.cat_status = otherData[0];
     }
     return new Promise((resolve, reject) => {
       connection.query(
@@ -194,8 +194,6 @@ function fetchGPSByID(id) {
   });
 }
 
-
-
 /**
  * Creates a report based on the total number of pictures and the count per district for a given request type.
  * 
@@ -235,6 +233,21 @@ async function GPSToAddress(latitude, longitude) {
       console.log("Error GPStoAddress: ", error);
       return null;
   }
+}
+
+function fetchDB(connection) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM pictures;`;
+
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +290,6 @@ function countPicturesToday() {
   
   return new Promise((resolve, reject) => {
     const query = `SELECT COUNT(id) as count FROM pictures WHERE date_taken = CURDATE();`;
-
     connection.query(query, (err, results) => {
       if (err) {
         console.error("Database query error:", err);
@@ -290,9 +302,12 @@ function countPicturesToday() {
   });
 }
 
+
 module.exports = {
   insertDataToDB,
   fetchGPSByID,
   GPSToAddress,
-  createReport
+  createReport,
+  createDBConnection,
+  fetchDB
 };

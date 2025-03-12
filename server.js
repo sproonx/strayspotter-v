@@ -9,23 +9,27 @@ const client_folder_name = "public";
 app.use(express.static(path.join(__dirname, client_folder_name)));
 
 require('dotenv').config();
-const HOST = process.env.HOST;
 const DEFAULT_PORT = 3000;
+const DEFAULT_HOST = '127.0.0.1';
+const HOST = process.env.HOST || DEFAULT_HOST;
+const PORT = process.env.PORT || DEFAULT_PORT;
+const SECOND_SERVER_HOST = process.env.SECOND_HOST || "127.0.0.1";
+const SECOND_SERVER_PORT = process.env.SECOND_PORT || "3000";
 
-// Wasabi S3 setup
+// AWS S3 setup
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single('image');
 const { S3Client, PutObjectCommand, ListObjectsV2Command, GetObjectCommand} = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const bucket_name = "catphotos"
-// Initialize S3 client for Wasabi
+const bucket_name = "strayspotter-bucket"
+
+// Initialize S3 client for AWS
 const s3Client = new S3Client({
   region: 'ap-southeast-1', // Region, adjust as needed
-  endpoint: 'https://s3.ap-southeast-1.wasabisys.com', // Wasabi endpoint
   credentials: {
-    accessKeyId: process.env.ACCESS_KEY_ID, // Your Wasabi access key
-    secretAccessKey: process.env.SECRET_ACCESS_KEY_ID, // Your Wasabi secret key
+    accessKeyId: process.env.ACCESS_KEY_ID, // Your S3 access key
+    secretAccessKey: process.env.SECRET_ACCESS_KEY_ID, // Your S3 secret key
   },
 });
 
@@ -59,16 +63,16 @@ async function convertHeicToJpg(inputBuffer) {
  * @param {string} unique_id A unique identifier for the file being uploaded.
  * @throws {Error} Throws an error if there is an issue during the upload process.
  */
-function uploadPicture(fileData, res, unique_id) {
+async function uploadPicture(fileData, res, unique_id) {
     const params = {
-      Bucket: bucket_name, // Your Wasabi bucket name
-      Key: unique_id, // File name in S3
+      Bucket: bucket_name, 
+      Key: unique_id,
       Body: fileData,
     };
     try {
       const command = new PutObjectCommand(params);
-      const data = s3Client.send(command);
-      res.send(`File uploaded successfully at https://${bucket_name}.s3.wasabisys.com/${params.Key}`);
+      await s3Client.send(command);
+      res.send(`File uploaded successfully at https://${bucket_name}.s3.amazonaws.com/${params.Key}`);
     } catch (s3Err) {
       return res.status(500).send(s3Err.message);
     }
@@ -107,7 +111,7 @@ app.get('/images', async (req, res) => {
       const numB = parseInt(b.replace(/\D/g, ''), 10);
       return numB - numA; // Compare in descending order
     });
-    res.json(imageKeys.slice(0,maxKeys));
+    res.json(imageKeys.slice(0, maxKeys));
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -122,7 +126,7 @@ app.get('/images', async (req, res) => {
  */
 app.get('/image-url', async (req, res) => {
   const { key } = req.query;
-  db.fetchGPSByID(key.slice(1)).then(data => {
+  db.fetchGPSByID(key.slice(1)).then(async data => {
     // Process the returned data here
     if (!data[0]){
       data_latitude = "";
@@ -131,7 +135,6 @@ app.get('/image-url', async (req, res) => {
       data_latitude = data[0].latitude ;
       data_longitude = data[0].longitude;
     }
-
     if (!key) {
       return res.status(400).send('Key is required');
     }
@@ -141,13 +144,10 @@ app.get('/image-url', async (req, res) => {
       Expires: 60 * 5, // URL expiration time in seconds
     };
     try {
-      getSignedUrl(s3Client, new GetObjectCommand(params)).then(url => {
-        res.json({
-          url: url,
-          latitude: data_latitude,
-          longitude: data_longitude
-      })
-    });
+      const url = await getSignedUrl(s3Client, new GetObjectCommand(params));
+      res.json({
+        url: url,
+      });
     } catch (err) {
       return res.status(500).send(err.message);
     }
@@ -184,8 +184,6 @@ app.get('/report', async (req, res) => {
  * @throws {Error} Throws an error if there is an issue during file upload, EXIF data parsing, or database insertion.
  */
 app.post('/upload', async (req, res) => {
-  var fileData;
-  
   upload(req, res, async (err) => {
     if (err) {
       return res.status(500).send(err.message);
@@ -193,26 +191,30 @@ app.post('/upload', async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file selected!');
     }
-
     // Converting heic to jpg with metadata
     let exifData = await exifr.parse(req.file.buffer);
-    console.log(exifData);
-    // If there are no metadata, default values for latitude and longitude are used.
-    if (exifData === undefined || exifData === null) {
-      var extractedData = {latitude:"0",longitude:"0"}
+    let otherData = [];
+    otherData.push(req.body.status);
+    let fileData;
+    let extractedData
 
-      result = "Null"
-      db.insertDataToDB(extractedData, result).then(picture_id => {
+    // If there are no metadata, default values for latitude and longitude are used.    
+    if (exifData === undefined || exifData === null) {
+      extractedData = {
+        latitude:"0",longitude:"0"
+      };
+      otherData.push("Null");
+      db.insertDataToDB(extractedData, otherData).then(picture_id => {
         console.log(picture_id); 
         if (req.file.mimetype == 'image/heic') {
           fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-              uploadPicture(fileData, res, 'k' + picture_id)  
-          })
+              uploadPicture(fileData, res, 'k' + picture_id);
+          });
         } else if (req.file.mimetype.startsWith('image/')) { 
-          fileData = req.file.buffer
-          uploadPicture(fileData, res, 'k' + picture_id)  
+          fileData = req.file.buffer;
+          uploadPicture(fileData, res, 'k' + picture_id);
         } else {
-          console.log("IT IS NOT AN IMAGE")
+          console.error("IT IS NOT AN IMAGE");
         }
       }).catch(err => {
         console.error("Error inserting data:", err);
@@ -222,52 +224,61 @@ app.post('/upload', async (req, res) => {
     // and used to convert the GPS coordinates into an address.
     else {
       extractedData = {
-        latitude: exifData.latitude, longitude: exifData.longitude
+        latitude: exifData.latitude, longitude: exifData.longitude, date: exifData.DateTimeOriginal
       }
       db.GPSToAddress(extractedData.latitude, extractedData.longitude).then(result => {
-        db.insertDataToDB(extractedData, result).then(picture_id => {
-          console.log(picture_id); 
-  
+        otherData.push(result);
+        db.insertDataToDB(extractedData, otherData, satus).then(picture_id => {
           if (req.file.mimetype == 'image/heic') {
             fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
-                uploadPicture(fileData, res, 'k' + picture_id)  
+                uploadPicture(fileData, res, 'k' + picture_id); 
             })
           } else if (req.file.mimetype.startsWith('image/')) { 
-            fileData = req.file.buffer
-            uploadPicture(fileData, res, 'k' + picture_id)  
+            fileData = req.file.buffer;
+            uploadPicture(fileData, res, 'k' + picture_id);
           } else {
-            console.log("IT IS NOT AN IMAGE")
+            console.error("IT IS NOT AN IMAGE");
           }
         }).catch(err => {
           console.error("Error inserting data:", err);
         });
+      }).catch(err => {
+        console.error("Error fetching data:", err);
       });
     }
   });
 });
 
-// TEST
-app.get('/admin/:id', async (req, res) => {
-  const requestURL = "http://127.0.0.1:8000/classification/" + req.params.id
+/**
+ * Classifies an image as a cat or not by calling an external classification server.
+ * 
+ * @param {string} id - The request object containing the image ID.
+ * @returns {Object} JSON response indicating whether the image is classified as a cat (`isCat: true/false`).
+ */
+app.get('/classification/:id', async (req, res) => {
+  const requestURL = `http://${SECOND_SERVER_HOST}:${SECOND_SERVER_PORT}/classification/${req.params.id}`;
   try {
     const response = await axios.get(requestURL);
-    if (response.data) {
-      res.send("Over 100");
-    }
-    else {
-      res.send("Under 100");
-    }
+    res.json({ isCat: response.data });
   } catch (error) {
     console.log(error);
     res.status(500).json({error: "error"});
   }
 });
 
+connection = db.createDBConnection();
+app.get('/admin/db', async (req, res) => {
+  try {
+    const data = await db.fetchDB(connection);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  };
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////
 // SERVER STARTUP
 ///////////////////////////////////////////////////////////////////////////////////////
-
-const PORT = process.env.PORT || DEFAULT_PORT;
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
 });
