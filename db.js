@@ -6,7 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////
 // External Modules and Dependencies
 ///////////////////////////////////////////////////////////////////////////////////////
-
 const mysql = require('mysql2');
 const axios = require('axios');
 const { postalData, NumbertoName } = require('./postal_data.js');
@@ -15,29 +14,6 @@ require('dotenv').config();
 ///////////////////////////////////////////////////////////////////////////////////////
 // Ineternal Function
 ///////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Create Connection only one time during the server startup
- */
-
-/**
- * Creates a connection to the MySQL database.
- * 
- * This function establishes a connection to the MySQL database with the given configuration details,
- * such as host, user, database name, and password, which are used to connect to the 'strayspotter_database'.
- * 
- * @returns {object} The MySQL connection object used for interacting with the database.
- */
-function createDBConnection() {
-  const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'strayspotter_database',
-    password: process.env.DB_PASSWORD,
-  });
-  console.log("Database Connected")
-  return connection;
-}
 
 /**
  * Counts the number of pictures taken in a specific district within a given time period.
@@ -81,7 +57,16 @@ function countPicturesLocation(districtNo, type) {
       });
   });
 }
-
+/**
+ * API Error Codes 
+ * 400 - Please send the access token in the request header as a bearer token.
+ * 400 - Your provided location is empty.
+ * 400 - Your provided location is invalid.
+ * 401 - Token has expired: Session expired. Please refresh your token (if still within refresh window) or re-login.
+ * 401 - Invalid token: Could not decode token: The token xxx; is an invalid JWS.
+ * 403 - Access Forbidden. GET access to component 'xxx' of service 'xxx' is not allowed by this user's role.
+ * 429 - API limit(s) exceeded.
+*/
 /**
  * Performs reverse geocoding using OneMap API to retrieve the postal code for a given latitude and longitude.
  *
@@ -89,6 +74,7 @@ function countPicturesLocation(districtNo, type) {
  * @param {number} longitude - The longitude coordinate.
  * @returns {Promise<string|null>} The postal code if found, otherwise null.
  * @throws Will log an error if the request fails or if latitude/longitude is null.
+ * 
  */
 async function reverseGeocoding(latitude, longitude) {
   const requestURL = `https://www.onemap.gov.sg/api/public/revgeocode?location=${latitude},${longitude}&buffer=100&addressType=All&otherFeatures=N`;
@@ -103,7 +89,8 @@ async function reverseGeocoding(latitude, longitude) {
         'Authorization': process.env.KEY_ONEMAP_API
       }
     });
-      return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
+    console.log(response);
+    return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
   } catch (error) {
     console.error('Error reverseGeocoding:\n', error);
     return null;
@@ -115,6 +102,28 @@ async function reverseGeocoding(latitude, longitude) {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * TODO: Create Connection only one time during the server startup
+ */
+
+/**
+ * Creates a connection to the MySQL database.
+ * 
+ * This function establishes a connection to the MySQL database with the given configuration details,
+ * such as host, user, database name, and password, which are used to connect to the 'strayspotter_database'.
+ * 
+ * @returns {object} The MySQL connection object used for interacting with the database.
+ */
+function createDBConnection() {
+  const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'strayspotter_database',
+    password: process.env.DB_PASSWORD,
+  });
+  return connection;
+}
+
+/**
  * TODO: THE ADDRESS AND CAT STAUTS TO BE UPDATED
  */
 /**
@@ -123,25 +132,26 @@ async function reverseGeocoding(latitude, longitude) {
  * If result is provided, updates with the appropriate postal information and sets cat status to 1.
  * 
  * @param {Object} metadata - Metadata of the picture, containing latitude, longitude, and date.
- * @param {Object|null} result - Geolocation result (can be null).
+ * @param {Object|null} otherData - Address result, status (can be null).
  * @returns {Promise} Resolves with the inserted record ID or rejects with an error.
  */
-function insertDataToDB(metadata, result) {
+function insertDataToDB(metadata, otherData) {
     const connection = createDBConnection()
     let data = {
       latitude : metadata.latitude,
       longitude : metadata.longitude,
-      date : metadata.CreateDate ?? "9999-12-30"
+      date : metadata.date_taken ?? "9999-12-30"
     }
-    if (!result) {
+    if (!otherData) {
       data.postcode = "0";
       data.district_no = "0";
       data.district_name = "none";
+      data.cat_status = "good";
     } else {
-      data.postcode = result.postcode;
-      data.district_no = result.districtNo;
-      data.district_name = result.districtName;
-      data.cat_status = 1;
+      data.postcode = otherData[1].postcode;
+      data.district_no = otherData[1].districtNo;
+      data.district_name = otherData[1].districtName;
+      data.cat_status = otherData[0];
     }
     return new Promise((resolve, reject) => {
       connection.query(
@@ -212,17 +222,32 @@ async function createReport(request_type) {
  * @param {number} longitude - The longitude of the location.
  * @returns {Object|null} An object in the format {postcode, districtNo, districtName} or null if an error occurs.
  */
-async function GPStoAddress(latitude, longitude) {
+async function GPSToAddress(latitude, longitude) {
   try {
       const postcode = await reverseGeocoding(latitude, longitude);
-        const districtData = postalData[postcode.substring(0,2)];
-        return {
-          postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
-        };
+      const districtData = postalData[postcode.substring(0,2)];
+      return {
+        postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
+      };
   } catch (error) {
       console.log("Error GPStoAddress: ", error);
       return null;
   }
+}
+
+function fetchDB(connection) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM pictures;`;
+
+    connection.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +290,6 @@ function countPicturesToday() {
   
   return new Promise((resolve, reject) => {
     const query = `SELECT COUNT(id) as count FROM pictures WHERE date_taken = CURDATE();`;
-
     connection.query(query, (err, results) => {
       if (err) {
         console.error("Database query error:", err);
@@ -278,11 +302,12 @@ function countPicturesToday() {
   });
 }
 
+
 module.exports = {
   insertDataToDB,
-  createDBConnection,
   fetchGPSByID,
-  GPStoAddress,
-  reverseGeocoding,
-  createReport
+  GPSToAddress,
+  createReport,
+  createDBConnection,
+  fetchDB
 };

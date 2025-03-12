@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-
 <body>
-
     <!-- Navigations -->
     <nav>
         <div class="logo">
@@ -44,7 +42,7 @@
         <input type="file" id="file-upload" style="display: none;">
     </nav>
 
-    <!-- Container -->
+    <!-- Image Gallery -->
     <div id="aesthetic">
        <div class="container">
             <div class="gallery-container" id="galleryGrid">
@@ -54,86 +52,6 @@
         </div>
     </div>
 
-
-
-
-    <!-- Scripts -->
-
-    <script src="script2.js">
-    </script>
-
-    <script>
-        function openModal() {
-            document.getElementById('uploadModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('uploadModal')) {
-                closeModal();
-            }
-        }
-    </script>
-
-
-
-    <script src="script.js">
-        // Add this new code for smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-    
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-    
-    <script>
-        document.getElementById('toggle-button').addEventListener('click', function() {
-            const navLinks = document.getElementById('nav-links');
-            navLinks.classList.toggle('active');
-            });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-                    link.parentElement.classList.add('active');
-                });
-            });
-        });
-    </script>
-
-
-<!-- Java script for Upload button -->
-    <script>
-        function openModal() {
-            document.getElementById('uploadModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('uploadModal')) {
-                closeModal();
-            }
-        }
-    </script>
-    
-
+    <script src="gallery.js"></script>
 </body>
-
-
 </html>

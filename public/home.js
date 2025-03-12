@@ -2,17 +2,15 @@
 // FUNCTIONS AND VARIABLES
 ///////////////////////////////////////////////////////////////////////////////////
 const imageContainer = document.getElementById('imageContainer');
-const fileInput = document.getElementById('imageInput');
+const form = document.querySelector('#uploadForm');
 const MAX_KEYS_TO_BE_SENT = 4;
 
 function closePopup() {
     document.getElementById('report-popup').style.display = 'none';
 }
-
 function goToReport() {
     window.location.href = 'report.html'; // Replace with the actual report page URL
 }
-
 function openModal() {
     document.getElementById('uploadModal').style.display = 'block';
 }
@@ -33,16 +31,12 @@ async function fetchImages(maxKeys) {
       console.error('Failed to fetch images:', response.statusText);
       return;
     }
-
     const imageKeys = await response.json();
-
     imageContainer.innerHTML = ''; // Clear existing images
-
     imageKeys.forEach(async (key) => {
       // Fetch the pre-signed URL for the image
       const urlResponse = await fetch(`/image-url?key=${key}`);
       if (urlResponse.ok) {
-
         urlResponse.json().then( data => {
           console.log(data);
            // Create an image element and set its source to the pre-signed URL
@@ -51,16 +45,18 @@ async function fetchImages(maxKeys) {
           img.alt = 'Image';
           img.style.maxWidth = '200px';
           img.style.margin = '10px';
-
           // Append the image to the container
           imageContainer.appendChild(img);
        })
       } else {
         console.error('Failed to fetch pre-signed URL:', urlResponse.statusText);
       }
-
     });
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Unused Function
+///////////////////////////////////////////////////////////////////////////////////////
 
 function sumNumbersInString(s) {
 // Use a regular expression to find all numbers in the string
@@ -77,48 +73,36 @@ function showTotalNumberOfCats(timeframe) {
     let newCount = 0;
 
     fetch(`/report?method=${timeframe}`).then(urlResponse => {
-       
         if (urlResponse.ok) {
             urlResponse.json().then(reportData => {
                 console.log(reportData);
+
                 return sumNumbersInString(reportData); // Total number of cats
             })
         }
     })
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
-// CODE EXECUTION
+// CODE EXECUTION AND EVENT LISTNERS
 ///////////////////////////////////////////////////////////////////////////////////
 
-//Calls the fetchImages function when the script first runs, fetching and
-//  displaying the initial set of images based on the maximum keys allowed (MAX_KEYS_TO_BE_SENT).
 fetchImages(MAX_KEYS_TO_BE_SENT);
 
-///////////////////////////////////////////////////////////////////////////////////
-// EVENT LISTENERS
-///////////////////////////////////////////////////////////////////////////////////
 
-// Sends the data to the server, and updates the image list on successful upload
+
+// Handle submit, Sends the data to the server, and updates the image list on successful upload
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-  console.log(event);
   event.preventDefault();
-
-  const formData = new FormData();
-  // const filenameInput = document.querySelector('input[name="filename"]'); - Deprecated only for handling file names inputted by the user
-  formData.append('image', fileInput.files[0]);
-  // formData.append('filename', filenameInput.value);
-
+  const formData = new FormData(form);
   const response = await fetch('/upload', {
-  method: 'POST',
-  body: formData,
+    method: 'POST',
+    body: formData,
   });
-
   if (response.ok) {
-  fetchImages(MAX_KEYS_TO_BE_SENT); // Refresh the image list after upload
+    fetchImages(MAX_KEYS_TO_BE_SENT); // Refresh the image list after upload
   } else {
-  console.error('Upload failed:', response.statusText);
+    console.error('Upload failed:', response.statusText);
   }
 });
 
