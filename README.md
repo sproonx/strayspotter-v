@@ -65,7 +65,7 @@
       <tr>
       <td align="center">Jowoon Kim<br> <a href="https://github.com/NiceKim">@NiceKim</a></td>
       <td align="center">Dajin Kim<br> <a href="https://github.com/Dajin-01">@Dajin-01</a></td>
-      <td align="center">Elias<br> <a href="https://github.com/sproonx">@sproonx </a></td>
+      <td align="center">Elias Klett<br> <a href="https://github.com/sproonx">@sproonx </a></td>
      </tr>
       <tr>
       <td align="center">Project Manager/<br> Backend Developer</td>
