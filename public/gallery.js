@@ -49,6 +49,20 @@ async function loadImages(maxKeys) {
   });
 }
 
+function openModal() {
+    document.getElementById('uploadModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('uploadModal').style.display = 'none';
+}
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+    if (event.target == document.getElementById('uploadModal')) {
+        closeModal();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // CODE EXECUTION AND EVENT LISTNERS
 ///////////////////////////////////////////////////////////////////////////////////
@@ -60,4 +74,19 @@ loadImages(MAX_KEYS_TO_BE_SENT);
  */
 loadMoreBtn.addEventListener('click', () => {
     alert('Load more images functionality would be implemented here.');
+});
+
+document.getElementById('toggle-button').addEventListener('click', function() {
+    const navLinks = document.getElementById('nav-links');
+    navLinks.classList.toggle('active');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+            link.parentElement.classList.add('active');
+        });
+    });
 });

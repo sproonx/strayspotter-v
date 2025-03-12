@@ -2,7 +2,7 @@
 // FUNCTIONS AND VARIABLES
 ///////////////////////////////////////////////////////////////////////////////////
 const imageContainer = document.getElementById('imageContainer');
-const fileInput = document.getElementById('imageInput');
+const form = document.querySelector('#uploadForm');
 const MAX_KEYS_TO_BE_SENT = 4;
 
 function closePopup() {
@@ -31,7 +31,6 @@ async function fetchImages(maxKeys) {
       console.error('Failed to fetch images:', response.statusText);
       return;
     }
-
     const imageKeys = await response.json();
     imageContainer.innerHTML = ''; // Clear existing images
     imageKeys.forEach(async (key) => {
@@ -90,12 +89,12 @@ function showTotalNumberOfCats(timeframe) {
 
 fetchImages(MAX_KEYS_TO_BE_SENT);
 
+
+
 // Handle submit, Sends the data to the server, and updates the image list on successful upload
 document.getElementById('uploadForm').addEventListener('submit', async (event) => {
   event.preventDefault();
-  const formData = new FormData();
-  formData.append('image', fileInput.files[0]);
-
+  const formData = new FormData(form);
   const response = await fetch('/upload', {
     method: 'POST',
     body: formData,
