@@ -4,44 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StraySpotter</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Francois+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet"> -->
+    <meta name="description" content="StraySpotter: A platform for cat lovers to share and report stray cats in their neighborhoods.">
+    <meta name="keywords" content="cats, strays, community, photography">
     <link rel="stylesheet" href="styles.css">
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentHash = window.location.hash;
-            const navLinks = document.querySelectorAll('.nav-links a');
-
-            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-            if (currentHash === '#founders') {
-                document.getElementById('founders-link').classList.add('active');
-            } else {
-                document.getElementById('home-link').classList.add('active');
-            }
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
-                    link.parentElement.classList.add('active');
-                });
-            });
-        });
-    </script>
 </head>
 
-
 <body>
-    <nav>
-        <div class="logo">
-            <img src="resources/logo.jpeg" alt="StraySpotter logo" style="height: 60px;">
+    <nav aria-label = "Main Navigation">
+        <a href="index.html" class="logo">
+            <img src="resources/logo.jpeg" alt="StraySpotter logo" class="logo-img">
             <span>StraySpotter</span>
-        </div>
-        <button class="toggle-button" id="toggle-button">
+        </a>
+        <button class="toggle-button" id="toggle-button" aria-label="Toggle navigation menu">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -52,105 +30,75 @@
             <li id="founders-link"><a href="#founders">Team</a></li>
             <li><a href="map.html">Map</a></li>
             <li><a href="report.html">Report</a></li>
-
         </ul>
         <div class="upload-icon">
-            <a href="#" onclick="openModal()"">
+            <a href="#" onclick="openModal()">
                 <img src="resources/camera_icon.png" alt="Upload">
             </a>
-            
         </div>
         <!-- Add the hidden file input -->
         <input type="file" id="file-upload" style="display: none;">
     </nav>
-    
 
+    <!--Landing Section-->
     <header id="home">
-      
         <div class="purpose-container">
             <div class="purpose-text">
                 <h1>Share your love for neighborhood cats!</h1>
-                
                 <p>
-
-                    Stray Spotter is a platform for cat lovers to share photos of neighborhood cats with fellow enthusiasts! By gathering data from these shared images, the platform provides insights into the status of stray cats, helping to support them and promote harmony between cats and their communities.
+                    Stray Spotter is a place for cat lovers to share photos of local stray cats. <br>
+                    We use the data to learn more about their wellbeing and help raise awareness. <br>
+                    Keeping the community and cats in harmony!
                 </p>
-                
-            <div id="upload" class="upload-section">
-                <button class="upload-button" onclick="openModal()">Share Pictures</button>
-            </div>
-                <!-- <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data">
-                    <input type="file" id="imageInput" name="image" required /> 
-                    <input type="submit" class="upload-button" value="Upload"/>
-                </form> -->
-            
+                <div id="upload" class="upload-section">
+                    <button class="upload-button" onclick="openModal()">Share Pictures</button>
+                </div>
             </div>
           </div>
-         
 
             <div class="purpose-image">
                 <img src="resources/cathead2.png" alt="Interactive Cat">
                 <div class="speech-bubble">Meow! Feed me!</div>
             </div>
-        
     </header>
     
-
     <!--Pop Up-->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Upload Your Cat Photo</h2> 
             <form action="/upload" id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="closeModal()">
-                <input type="file" id="imageInput" name="image" required />
-                
-                
+                <input type="file" id="imageInput" name="image" required  accept="image/*, .heic, .heif" />
                 <hr>
                 <h2>Cat Status</h2>
                 <p>Please choose an icon that best matches your cat's condition</p>
                 <div class="radio-buttons">
-                    <label for="happy"><input type="radio" name="category" id="happy" value="option1"> <img src="resources/green_cat2.jpeg" alt="" class="radio-image"></label>
-                    <label for="normal"><input type="radio" name="category" id="normal" value="option2"><img src="resources/yellow_icon.jpeg" alt="" class="radio-image"></label>
-                    <label for="sad"><input type="radio" name="category" id="sad" value="option3"><img src="resources/red_cat_3.jpeg" alt="" class="radio-image"></label>
+                    <label for="happy" >
+                       <input type="radio" name="status" id="happy" value="good" checked>
+                        <img src="resources/happy.png" alt="Happy" class="radio-image">
+                    </label>
+                    <label for="normal">
+                        <input type="radio" name="status" id="normal" value="medium">
+                        <img src="resources/worry.png" alt="Normal" class="radio-image">
+                    </label>
+                    <label for="sad">
+                        <input type="radio" name="status" id="sad" value="bad">
+                        <img src="resources/cry.png" alt="Sad" class="radio-image">
+                    </label>
                 </div>
                 <input type="submit" class="upload-button" value="Upload"/>
             </form>
         </div>
     </div>
 
-    <script>
-        
-        document.getElementById('toggle-button').addEventListener('click', function() {
-        const navLinks = document.getElementById('nav-links');
-        navLinks.classList.toggle('active');
-        });
-        function openModal() {
-            document.getElementById('uploadModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('uploadModal')) {
-                closeModal();
-            }
-        }
-    </script>
-
-
-
-<!-- Gallery -->
-
+    <!-- Gallery -->
     <section class="gallery" id="gallery" >
         <h2>Gallery</h2>
         <div class="gallery-grid" id="imageContainer"></div>
         <a href="gallery.html"><button class="see-more">See More</button></a>
     </section>
 
-
+    <!-- About us -->
     <section class="founders" id="founders">
         <h2>Our Team</h2>
         <div class="founders-grid">
@@ -165,8 +113,6 @@
                     <li>Optimized visuals and user interactions </li>
                 </ul>
             </div>
-
-            
             <div class="founder">
                 <img src="resources/jowoon.jpg" alt="John">
                 
@@ -194,120 +140,45 @@
         </div>
     </section>
 
-
-<section class="report-section">
-    <div class="report-container">
-        <div class="report-header">
-            <h2>Stray Cat Reports</h2>
-            <p>Stay informed about the stray cat population in your area</p>
-        </div>
-        <div class="report-content">
-            <div class="report-stats">
-                <h3>Current Statistics</h3>
-                <div class="stat-item">
-                    <p class="stat-label">Strays Spotted Today:</p>
-                    <p class="stat-value" id="today">3</p>
+    <!-- Report -->
+    <section class="report-section">
+        <div class="report-container">
+            <div class="report-header">
+                <h2>Stray Cat Reports</h2>
+                <p>Stay informed about the stray cat population in your area</p>
+            </div>
+            <div class="report-content">
+                <div class="report-stats">
+                    <h3>Current Statistics</h3>
+                    <div class="stat-item">
+                        <p class="stat-label">Strays Spotted Today:</p>
+                        <p class="stat-value" id="today">3</p>
+                    </div>
+                    <div class="stat-item">
+                        <p class="stat-label">Weekly Total:</p>
+                        <p class="stat-value" id="week">12</p>
+                    </div>
+                    <div class="stat-item">
+                        <p class="stat-label">Monthly Total:</p>
+                        <p class="stat-value" id="month">12</p>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <p class="stat-label">Weekly Total:</p>
-                    <p class="stat-value" id="week">12</p>
-                </div>
-                <div class="stat-item">
-                    <p class="stat-label">Monthly Total:</p>
-                    <p class="stat-value" id="month">12</p>
+                <div class="report-buttons">
+        
+                    <a href="report.html" class="report-btn">View Full Detailed Report</a>
                 </div>
             </div>
-            <div class="report-buttons">
-       
-                <a href="report.html" class="report-btn">View Full Detailed Report</a>
-            </div>
         </div>
-    </div>
-</section>
-
-<!-- ... (rest of the content remains unchanged) ... -->
-
-<script>
-    function showReport(timeframe) {
-        // This function can be implemented to show different reports
-        // For now, it just alerts the user
-        alert(`Showing ${timeframe} report. This feature is coming soon!`);
-    }
-</script>
-
-
+    </section>
 
     <footer>
         <p> &copy; Copyright 2024. All Rights Reserved</p>
         <p>Follow us on Socials | GitHub</p>
-
     </footer>
 
-
-
-
-
-
-
-
-    <script src="script.js">
-        // Add this new code for smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-    
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-    </script>
-
-<script>
-
-    // console.log(showTotalNumberOfCats("day"));
-    // document.querySelector(`.stat-value-today`).innerHTML = showTotalNumberOfCats("day");
-    // document.querySelector(`.stat-value-week`).innerHTML = showTotalNumberOfCats("week");
-    // document.querySelector(`.stat-value-month`).innerHTML = showTotalNumberOfCats("month");
-
-    function sumNumbersInString(s) {
-        // Use a regular expression to find all numbers in the string
-        const numbers = s.match(/\d+/g);
-        // If no numbers are found, return 0
-        if (!numbers) return 0;
-        // Convert strings to integers and sum them up
-        const total = numbers.reduce((sum, num) => sum + parseInt(num, 10), 0);0
-        return total;
-    }
-
-    function showTotalNumberOfCats(timeframe) {
-        let text = '';
-        let newCount = 0;
-        // console.log(`/report?method=${timeframe}`);
-
-        fetch(`/report?method=${timeframe}`).then(urlResponse => {
-           
-            if (urlResponse.ok) {
-                urlResponse.json().then(reportData => {
-                    console.log(reportData);
-                    return sumNumbersInString(reportData); // Total number of cats
-                })
-            }
-        })
-
-    }
-</script>
-
-
-
-
-
-
-
-
-    
+<script src="home.js"></script>
 </body>
-
-
 </html>
+
+
+

@@ -114,7 +114,6 @@
             const strayCount = document.getElementById('stray-count');
             let text = '';
             let newCount = 0;
-            // console.log(`/report?method=${timeframe}`);
 
             fetch(`/report?method=${timeframe}`).then(urlResponse => {
                
