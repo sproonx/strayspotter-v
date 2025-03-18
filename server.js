@@ -16,6 +16,13 @@ const PORT = process.env.PORT || DEFAULT_PORT;
 const SECOND_SERVER_HOST = process.env.SECOND_HOST || "127.0.0.1";
 const SECOND_SERVER_PORT = process.env.SECOND_PORT || "3000";
 
+// Swagger doucumetation setup
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
 // AWS S3 setup
 const multer = require('multer');
 const storage = multer.memoryStorage();
