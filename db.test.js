@@ -15,7 +15,7 @@
 //     host: 'localhost',
 //     user: 'root',
 //     database: 'strayspotter_database',
-//     password: process.env.DB_PASSWORD,
+//     password: process..env.DB_PASSWORD,
 //   });
 
 // const sql = "Select * from pictures";
