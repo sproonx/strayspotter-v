@@ -70,7 +70,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 # Early Stopping 적용 (과적합 방지)
 early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
-# 모델 학습
+# 모델 학
 model.fit(
     train_generator,
     validation_data=val_generator,
