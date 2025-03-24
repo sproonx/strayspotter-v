@@ -301,12 +301,19 @@ async function createReport(request_type) {
  */
 async function GPSToAddress(latitude, longitude) {
   const connection = createDBConnection()
+  try {
   const postcode = await reverseGeocoding(connection, latitude, longitude);
   const districtData = postalData[postcode.substring(0,2)];
-  connection.end()
   return {
-    postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
+    postcode: postcode,
+    districtNo: districtData.districtNo,
+    districtName: districtData.districtName
   };
+  } catch(err) {
+    throw err; 
+  } finally {
+    connection.end();
+  }
 }
 
 /**
