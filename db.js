@@ -58,36 +58,56 @@ function countPicturesLocation(districtNo, type) {
   });
 }
 
+/**
+ * Updates an existing access token in the database.
+ * 
+ * @async
+ * @param {Object} connection - The database connection object used to execute the query.
+ * @param {Object} token_info - An object containing the token details to be updated.
+  * @param {string} token_info.token_name - The name of the token to update.
+  * @param {number} token_info.expire_date - The new expiration date of the token.
+  * @param {string} token_info.access_token - The new access token.
+ * @returns {Object} - The result of the query execution.
+ */
 async function updateAccessToken(connection, token_info) {
   const query = `UPDATE tokenStore SET expire_date = ?, access_token = ? WHERE token_name = ?`;
-  try {
-    const [results] = await connection.promise().query(query,
-      [token_info.expire_date, token_info.access_token, token_info.token_name]
-    );
-    return results;
-  } catch (err) {
-    throw err; 
-  }
+  const [results] = await connection.promise().query(query,
+    [token_info.expire_date, token_info.access_token, token_info.token_name]
+  );
+  return results;
 }
 
-// return value = results = {name, expire_date, jwt}
-// if not exist -> return null
+/**
+ * Retrieves an access token from the database based on the token name.
+ * 
+ * @async
+ * @param {Object} connection - The database connection object used to execute the query.
+ * @param {string} token_name - The name of the token to be retrieved.
+ * @returns {Object|null} - The token data if found, or `null` if no token is found.
+ */
 async function getAccessToken(connection, token_name) {
   const query = `SELECT * FROM tokenStore WHERE token_name = ? LIMIT 1`;
-  try {
-    const [results] = await connection.promise().query(query,
-      [token_name]
-    );
-    if (results.length == 0) {
-      return null;
-    }
-    return results[0];
-  } catch (err) {
-    throw err; 
+  const [results] = await connection.promise().query(query,
+    [token_name]
+  );
+  if (results.length == 0) {
+    return null;
   }
+  return results[0];
 }
 
-// return 저장 된 토큰 이름
+/**
+ * This function inserts a new token record into the `tokenStore` table with the provided token information.
+ * 
+ * @async
+ * @param {Object} connection - The database connection object used to execute the query.
+ * @param {Object} token_info - The token information to be saved in the database.
+  * @param {string} token_info.token_name - The name of the token.
+  * @param {number} token_info.expire_date - The expiration date of the token in Unix timestamp format.
+  * @param {string} token_info.access_token - The access token string.
+ * @returns {string} - The name of the token that was saved.
+ * @throws {Error} - Throws an error if the query execution fails.
+ */
 async function saveAccessToken (connection, token_info) {
   const query =  `INSERT INTO tokenStore (token_name, expire_date, access_token) VALUES (?, ?, ?)`;
   try {
@@ -100,7 +120,15 @@ async function saveAccessToken (connection, token_info) {
   }
 }
 
-// Return Data response.data = { access_token: "JWT", expiry_timestamp: "UNIX Timestamp" }
+/**
+* Requests a new authentication token from the OneMap API
+*
+* @async
+* @returns {Promise<Object>} Token data object with the following properties:
+ *   - {string} access_token - JWT token for authentication
+ *   - {string} expiry_timestamp - UNIX timestamp indicating when the token expires
+* @throws {Error} If the API request fails or returns an error
+*/
 async function requestOneMapToken() {
   try {
       const response = await axios.post(
@@ -117,6 +145,14 @@ async function requestOneMapToken() {
   }
 }
 
+/**
+* Retrieves or refreshes a valid OneMap API token
+*
+* @async
+* @param {Object} connection - Database connection object
+* @returns {Promise<Object>} A valid token object containing token_name, expire_date, and access_token
+* @throws {Error} If token retrieval or refresh fails
+*/
 async function getValidToken(connection) {
   // Get the token from the DB
   let token = await getAccessToken(connection, "onemap");
@@ -155,6 +191,7 @@ async function getValidToken(connection) {
 /**
  * Performs reverse geocoding using OneMap API to retrieve the postal code for a given latitude and longitude.
  *
+ * @async
  * @param {object} connection - The MySQL database connection object.
  * @param {number} latitude - The latitude coordinate.
  * @param {number} longitude - The longitude coordinate.
@@ -178,10 +215,6 @@ async function reverseGeocoding(connection, latitude, longitude) {
 ///////////////////////////////////////////////////////////////////////////////////////
 // Exported function
 ///////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Create Connection only one time during the server startup
- */
 
 /**
  * Creates a connection to the MySQL database.
