@@ -22,7 +22,6 @@ const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-
 // AWS S3 setup
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -276,7 +275,7 @@ app.get('/classification/:id', async (req, res) => {
 connection = db.createDBConnection();
 app.get('/admin/db', async (req, res) => {
   try {
-    const data = await db.fetchDB(connection);
+    const data = await db.fetchAllDB(connection);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

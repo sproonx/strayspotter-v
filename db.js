@@ -57,6 +57,91 @@ function countPicturesLocation(districtNo, type) {
       });
   });
 }
+
+async function updateAccessToken(connection, token_info) {
+  const query = `UPDATE tokenStore SET expire_date = ?, access_token = ? WHERE token_name = ?`;
+  try {
+    const [results] = await connection.promise().query(query,
+      [token_info.expire_date, token_info.access_token, token_info.token_name]
+    );
+    return results;
+  } catch (err) {
+    throw err; 
+  }
+}
+
+// return value = results = {name, expire_date, jwt}
+// if not exist -> return null
+async function getAccessToken(connection, token_name) {
+  const query = `SELECT * FROM tokenStore WHERE token_name = ? LIMIT 1`;
+  try {
+    const [results] = await connection.promise().query(query,
+      [token_name]
+    );
+    if (results.length == 0) {
+      return null;
+    }
+    return results[0];
+  } catch (err) {
+    throw err; 
+  }
+}
+
+// return 저장 된 토큰 이름
+async function saveAccessToken (connection, token_info) {
+  const query =  `INSERT INTO tokenStore (token_name, expire_date, access_token) VALUES (?, ?, ?)`;
+  try {
+    const [results] = await connection.promise().query(query, 
+      [token_info.token_name, token_info.expire_date, token_info.access_token]
+    );
+    return results.token_name;  
+  } catch (err) {
+      throw err;
+  }
+}
+
+// Return Data response.data = { access_token: "JWT", expiry_timestamp: "UNIX Timestamp" }
+async function requestOneMapToken() {
+  try {
+      const response = await axios.post(
+      `${process.env.ONEMAP_BASE_URL}/api/auth/post/getToken`,
+      {
+          email: process.env.ONEMAP_API_EMAIL,
+          password: process.env.ONEMAP_API_PASSWORD,
+      }
+      );
+      const token_data = response.data;
+      return token_data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getValidToken(connection) {
+  // Get the token from the DB
+  let token = await getAccessToken(connection, "onemap");
+  
+  const current_time_stamp = Math.floor(Date.now() / 1000);
+  // Request for new Token if there are no token or expiered
+  if (!token || current_time_stamp > token.expire_date) {
+      const token_result = await requestOneMapToken();
+      const newToken = {
+          token_name: "onemap",
+          expire_date: token_result.expiry_timestamp,
+          access_token: token_result.access_token
+      };
+      if (!token) {
+          // If there were no token, save it in DB
+          await saveAccessToken(connection, newToken);
+      } else {
+          // If there were token, update DB
+          await updateAccessToken(connection, newToken);
+      }
+      token = newToken; 
+  }
+  return token;
+}
+
 /**
  * API Error Codes 
  * 400 - Please send the access token in the request header as a bearer token.
@@ -70,32 +155,25 @@ function countPicturesLocation(districtNo, type) {
 /**
  * Performs reverse geocoding using OneMap API to retrieve the postal code for a given latitude and longitude.
  *
+ * @param {object} connection - The MySQL database connection object.
  * @param {number} latitude - The latitude coordinate.
  * @param {number} longitude - The longitude coordinate.
- * @returns {Promise<string|null>} The postal code if found, otherwise null.
+ * @returns {Promise<string>} The postal code if found
  * @throws Will log an error if the request fails or if latitude/longitude is null.
  * 
  */
-async function reverseGeocoding(latitude, longitude) {
-  const requestURL = `https://www.onemap.gov.sg/api/public/revgeocode?location=${latitude},${longitude}&buffer=100&addressType=All&otherFeatures=N`;
-
+async function reverseGeocoding(connection, latitude, longitude) {
   if (!latitude || !longitude) {
-    console.error('Error reverseGeocoding: Null value');
-    return null;
+    throw new Error('Error reverseGeocoding: Null value');
   }
-  try {
-    const response = await axios.get(requestURL, {
-      headers: {
-        'Authorization': process.env.KEY_ONEMAP_API
-      }
-    });
-    console.log(response);
-    return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
-  } catch (error) {
-    console.error('Error reverseGeocoding:\n', error);
-    return null;
-  }
+  let token = await getValidToken(connection);
+  const requestURL = `https://www.onemap.gov.sg/api/public/revgeocode?location=${latitude},${longitude}&buffer=100&addressType=All&otherFeatures=N`;
+  const response = await axios.get(requestURL, {
+    headers: { 'Authorization': token.access_token }
+  });
+  return response.data.GeocodeInfo[0].POSTALCODE; // Return the postal code    
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Exported function
@@ -217,37 +295,34 @@ async function createReport(request_type) {
 /**
  * Converts GPS coordinates (latitude and longitude) to postal code and district information.
  * 
- * @async
  * @param {number} latitude - The latitude of the location.
  * @param {number} longitude - The longitude of the location.
- * @returns {Object|null} An object in the format {postcode, districtNo, districtName} or null if an error occurs.
+ * @returns {Object} An object in the format {postcode, districtNo, districtName}
  */
 async function GPSToAddress(latitude, longitude) {
-  try {
-      const postcode = await reverseGeocoding(latitude, longitude);
-      const districtData = postalData[postcode.substring(0,2)];
-      return {
-        postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
-      };
-  } catch (error) {
-      console.log("Error GPStoAddress: ", error);
-      return null;
-  }
+  const connection = createDBConnection()
+  const postcode = await reverseGeocoding(connection, latitude, longitude);
+  const districtData = postalData[postcode.substring(0,2)];
+  connection.end()
+  return {
+    postcode: postcode, districtNo: districtData.districtNo, districtName: districtData.districtName
+  };
 }
 
-function fetchDB(connection) {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM pictures;`;
-
-    connection.query(query, (err, results) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
+/**
+ * Retrieves all data from the 'pictures' table in the database.
+ * 
+ * @param {Object} connection - The MySQL database connection object.
+ * @returns {Promise<Array>} - A promise that resolves to an array containing all the records retrieved from the 'pictures' table.
+ */
+async function fetchAllDB(connection) {
+  const query = `SELECT * FROM pictures;`;
+  try {
+    const [results] = await connection.promise().query(query);
+    return results;
+  } catch(err) {
+    throw err;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -302,12 +377,18 @@ function countPicturesToday() {
   });
 }
 
-
 module.exports = {
   insertDataToDB,
   fetchGPSByID,
   GPSToAddress,
   createReport,
   createDBConnection,
-  fetchDB
+  fetchAllDB,
+
+  reverseGeocoding,
+  getAccessToken,
+  requestOneMapToken,
+  saveAccessToken,
+  updateAccessToken,
+  getValidToken
 };
