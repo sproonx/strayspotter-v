@@ -251,7 +251,7 @@ function insertDataToDB(metadata, otherData) {
     let data = {
       latitude : metadata.latitude,
       longitude : metadata.longitude,
-      date : metadata.date_taken ?? "9999-12-30"
+      date : metadata.date ?? "9999-12-30"
     }
     if (!otherData) {
       data.postcode = "0";
