@@ -17,10 +17,34 @@ const SECOND_SERVER_HOST = process.env.SECOND_HOST || "127.0.0.1";
 const SECOND_SERVER_PORT = process.env.SECOND_PORT || "3000";
 
 // Swagger doucumetation setup
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// const swaggerUi = require('swagger-ui-express');
+// const YAML = require('yamljs');
+// const swaggerDocument = YAML.load('./swagger.yaml');
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "My API",
+      version: "1.0.0",
+      description: "This is a sample API using swagger-jsdoc",
+    },
+    servers: [
+      {
+        url: "http://127.0.0.1:8000",
+        description: "Development server",
+      },
+    ],
+  },
+  apis: ["*.js"],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+
 
 // AWS S3 setup
 const multer = require('multer');
@@ -202,7 +226,7 @@ app.post('/upload', async (req, res) => {
     let otherData = [];
     otherData.push(req.body.status);
     let fileData;
-    let extractedData
+    let extractedData;
 
     // If there are no metadata, default values for latitude and longitude are used.    
     if (exifData === undefined || exifData === null) {
@@ -234,7 +258,7 @@ app.post('/upload', async (req, res) => {
       }
       db.GPSToAddress(extractedData.latitude, extractedData.longitude).then(result => {
         otherData.push(result);
-        db.insertDataToDB(extractedData, otherData, satus).then(picture_id => {
+        db.insertDataToDB(extractedData, otherData).then(picture_id => {
           if (req.file.mimetype == 'image/heic') {
             fileData = convertHeicToJpg(req.file.buffer).then(fileData => { 
                 uploadPicture(fileData, res, 'k' + picture_id); 
@@ -272,9 +296,21 @@ app.get('/classification/:id', async (req, res) => {
   }
 });
 
-connection = db.createDBConnection();
+/**
+ * @swagger
+ * /admin/db:
+ *   get:
+ *     summary: Fetch all data from DB
+ *     description: Fetch all data from DB in JSON
+ *     responses:
+ *       200:
+ *         description: Return the data from the db in JSON
+ *       500:
+ *         description: Return error with the message
+ */
 app.get('/admin/db', async (req, res) => {
   try {
+    connection = db.createDBConnection();
     const data = await db.fetchAllDB(connection);
     res.json(data);
   } catch (err) {
